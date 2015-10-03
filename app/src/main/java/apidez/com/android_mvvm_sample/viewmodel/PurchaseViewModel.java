@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import apidez.com.android_mvvm_sample.api.ApiClient;
 import apidez.com.android_mvvm_sample.model.Purchase;
-import apidez.com.android_mvvm_sample.util.NumericUtils;
+import apidez.com.android_mvvm_sample.utils.NumericUtils;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 

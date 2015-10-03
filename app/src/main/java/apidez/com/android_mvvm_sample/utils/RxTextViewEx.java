@@ -1,4 +1,4 @@
-package apidez.com.android_mvvm_sample.util;
+package apidez.com.android_mvvm_sample.utils;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;

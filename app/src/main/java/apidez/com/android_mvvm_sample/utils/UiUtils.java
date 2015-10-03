@@ -1,4 +1,4 @@
-package apidez.com.android_mvvm_sample.util;
+package apidez.com.android_mvvm_sample.utils;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;

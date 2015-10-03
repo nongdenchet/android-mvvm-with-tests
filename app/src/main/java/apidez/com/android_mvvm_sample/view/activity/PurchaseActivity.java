@@ -15,9 +15,9 @@ import javax.inject.Inject;
 
 import apidez.com.android_mvvm_sample.R;
 import apidez.com.android_mvvm_sample.application.DemoApplication;
-import apidez.com.android_mvvm_sample.util.RxTextViewEx;
-import apidez.com.android_mvvm_sample.util.ToastUtils;
-import apidez.com.android_mvvm_sample.util.UiUtils;
+import apidez.com.android_mvvm_sample.utils.RxTextViewEx;
+import apidez.com.android_mvvm_sample.utils.ToastUtils;
+import apidez.com.android_mvvm_sample.utils.UiUtils;
 import apidez.com.android_mvvm_sample.viewmodel.IPurchaseViewModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;

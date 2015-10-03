@@ -1,4 +1,4 @@
-package apidez.com.android_mvvm_sample.util;
+package apidez.com.android_mvvm_sample.utils;
 
 /**
  * Created by nongdenchet on 10/3/15.
