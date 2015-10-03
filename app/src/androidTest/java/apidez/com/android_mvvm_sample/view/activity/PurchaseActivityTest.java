@@ -56,7 +56,6 @@ public class PurchaseActivityTest {
                 .stubPurchaseModule(new StubPurchaseModule())
                 .build();
         app.setComponent(component);
-        component.inject(this);
 
         // Run the activity
         activityTestRule.launchActivity(new Intent());
