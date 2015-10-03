@@ -37,39 +37,41 @@ public class PurchaseActivityInteractTest {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void testImpl() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
-        activityTestRule.getActivity().getApplication().registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            }
+        activityTestRule.getActivity().getApplication()
+                .registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+                    @Override
+                    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                    }
 
-            @Override
-            public void onActivityStarted(Activity activity) {
-            }
+                    @Override
+                    public void onActivityStarted(Activity activity) {
+                    }
 
-            @Override
-            public void onActivityResumed(Activity activity) {
-            }
+                    @Override
+                    public void onActivityResumed(Activity activity) {
+                    }
 
-            @Override
-            public void onActivityPaused(Activity activity) {
-            }
+                    @Override
+                    public void onActivityPaused(Activity activity) {
+                    }
 
-            @Override
-            public void onActivityStopped(Activity activity) {
-            }
+                    @Override
+                    public void onActivityStopped(Activity activity) {
+                    }
 
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-            }
+                    @Override
+                    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+                    }
 
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-                if (activityTestRule.getActivity() == activity) {
-                    latch.countDown();
-                    activityTestRule.getActivity().getApplication().unregisterActivityLifecycleCallbacks(this);
-                }
-            }
-        });
+                    @Override
+                    public void onActivityDestroyed(Activity activity) {
+                        if (activityTestRule.getActivity() == activity) {
+                            latch.countDown();
+                            activityTestRule.getActivity().getApplication()
+                                    .unregisterActivityLifecycleCallbacks(this);
+                        }
+                    }
+                });
         latch.await();
     }
 
