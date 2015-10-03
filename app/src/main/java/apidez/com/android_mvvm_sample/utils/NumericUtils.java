@@ -7,14 +7,14 @@ public class NumericUtils {
     /**
      * Check if a string is Integer
      */
-    public static boolean isInteger(String number) {
+    public static boolean isNumeric(String number) {
         return number.matches("-?\\d+(\\.\\d+)?");
     }
 
     /**
      * Check if a string is Integer
      */
-    public static boolean isInteger(CharSequence number) {
-        return isInteger(number.toString());
+    public static boolean isNumeric(CharSequence number) {
+        return isNumeric(number.toString());
     }
 }

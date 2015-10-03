@@ -44,7 +44,7 @@ public class PurchaseViewModel implements IPurchaseViewModel {
      * Return an observable that emit the validation of credit card
      */
     public Observable<Boolean> creditCardValid() {
-        return mCreditCard.map(inputText -> (inputText.length() == 12 && NumericUtils.isInteger(inputText)));
+        return mCreditCard.map(inputText -> (inputText.length() == 12 && NumericUtils.isNumeric(inputText)));
     }
 
     /**
