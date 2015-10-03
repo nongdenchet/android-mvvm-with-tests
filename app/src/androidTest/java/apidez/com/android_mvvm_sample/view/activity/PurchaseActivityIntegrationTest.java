@@ -21,8 +21,8 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static apidez.com.android_mvvm_sample.util.MatcherEx.hasListener;
-import static apidez.com.android_mvvm_sample.util.MatcherEx.hasResId;
+import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasListener;
+import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasResId;
 import static org.hamcrest.Matchers.not;
 
 /**
