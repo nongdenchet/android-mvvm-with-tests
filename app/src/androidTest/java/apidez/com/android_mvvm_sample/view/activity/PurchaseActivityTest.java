@@ -1,12 +1,7 @@
 package apidez.com.android_mvvm_sample.view.activity;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -16,8 +11,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.concurrent.CountDownLatch;
 
 import apidez.com.android_mvvm_sample.R;
 import apidez.com.android_mvvm_sample.application.DemoApplication;
@@ -116,46 +109,5 @@ public class PurchaseActivityTest {
         onView(withId(R.id.btnSubmit)).check(matches(hasListener()));
         onView(withId(R.id.btnSubmit)).check(matches(hasResId(R.drawable.bg_submit)));
         onView(withId(R.id.btnSubmit)).perform(click());
-    }
-
-    // Uncomment to run test with life-cycle
-    // @Test
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void testImpl() throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
-        activityTestRule.getActivity().getApplication().registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-                if (activityTestRule.getActivity() == activity) {
-                    latch.countDown();
-                    activityTestRule.getActivity().getApplication().unregisterActivityLifecycleCallbacks(this);
-                }
-            }
-        });
-        latch.await();
     }
 }
