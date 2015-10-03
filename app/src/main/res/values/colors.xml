@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#fd0becd5</color>
+    <color name="red_primary">#ea2c2c</color>
+    <color name="action_bar_title">#ffffff</color>
+</resources>
