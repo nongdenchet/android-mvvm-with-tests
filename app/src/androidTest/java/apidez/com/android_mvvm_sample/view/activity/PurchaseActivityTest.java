@@ -63,6 +63,12 @@ public class PurchaseActivityTest {
     }
 
     @Test
+    public void noErrorAtTheBeginning() throws Exception {
+        onView(withText(R.string.error_credit_card)).check(doesNotExist());
+        onView(withText(R.string.error_email)).check(doesNotExist());
+    }
+
+    @Test
     public void hasNoErrorCreditCard() throws Exception {
         onView((withId(R.id.creditCard))).perform(typeText("I am"));
         onView(withText(R.string.error_credit_card)).check(doesNotExist());
