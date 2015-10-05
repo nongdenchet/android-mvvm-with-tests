@@ -33,3 +33,5 @@ captures/
 
 # build folder
 /build
+*.iml
+/.idea
