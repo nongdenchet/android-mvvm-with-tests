@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.trello.rxlifecycle.ActivityEvent;
-
 import javax.inject.Inject;
 
 import apidez.com.android_mvvm_sample.R;
@@ -66,9 +64,6 @@ public class PurchaseActivity extends BaseActivity {
 
         // Setup views
         setUpView();
-
-        // bind to viewmodel
-        bindViewModel();
     }
 
     private void setUpView() {
@@ -85,34 +80,31 @@ public class PurchaseActivity extends BaseActivity {
     private void bindViewModel() {
         // binding credit card
         RxTextViewEx.textChanges(edtCreditCard)
-                .compose(bindUntilEvent(ActivityEvent.STOP))
+                .compose(bindToLifecycle())
                 .subscribe(viewModel::nextCreditCard);
 
         // binding email
         RxTextViewEx.textChanges(edtEmail)
-                .compose(bindUntilEvent(ActivityEvent.STOP))
+                .compose(bindToLifecycle())
                 .subscribe(viewModel::nextEmail);
 
         // create event on click on submit
         onSubmitClickListener = v -> viewModel.submit()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(progressDialog::hide)
+                .compose(bindToLifecycle())
                 .doOnSubscribe(progressDialog::show)
                 .subscribe(done -> {
                     ToastUtils.showLongToast(getApplicationContext(), R.string.success);
+                    progressDialog.hide();
                     finish();
                 }, throwable -> {
                     ToastUtils.showLongToast(getApplicationContext(), R.string.error);
                 });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         // binding credit card change
         viewModel.creditCardValid()
+                .compose(bindToLifecycle())
                 .subscribe((enabled) -> {
                     layoutCreditCard.setError(getString(R.string.error_credit_card));
                     layoutCreditCard.setErrorEnabled(!enabled);
@@ -121,6 +113,7 @@ public class PurchaseActivity extends BaseActivity {
 
         // binding password change
         viewModel.emailValid()
+                .compose(bindToLifecycle())
                 .subscribe((enabled) -> {
                     layoutEmail.setError(getString(R.string.error_email));
                     layoutEmail.setErrorEnabled(!enabled);
@@ -129,10 +122,19 @@ public class PurchaseActivity extends BaseActivity {
 
         // can submit
         viewModel.canSubmit()
+                .compose(bindToLifecycle())
                 .subscribe(active -> {
                     btnSubmit.setBackgroundResource(active ? R.drawable.bg_submit : R.drawable.bg_inactive_submit);
                     btnSubmit.setOnClickListener(active ? onSubmitClickListener : null);
                 });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // bind to viewmodel
+        bindViewModel();
     }
 
     @Override
