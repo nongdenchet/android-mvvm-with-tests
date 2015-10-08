@@ -1,5 +1,7 @@
 package apidez.com.android_mvvm_sample.utils;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.view.View;
 
 import org.hamcrest.Description;
@@ -39,6 +41,7 @@ public class MatcherEx {
      */
     public static Matcher<View> hasListener() {
         return new TypeSafeMatcher<View>() {
+            @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             @Override
             protected boolean matchesSafely(View view) {
                 return view.hasOnClickListeners();

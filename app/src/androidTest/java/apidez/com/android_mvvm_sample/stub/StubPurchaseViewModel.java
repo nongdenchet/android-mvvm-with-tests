@@ -9,8 +9,6 @@ import rx.subjects.BehaviorSubject;
  */
 public class StubPurchaseViewModel implements IPurchaseViewModel {
 
-    private CharSequence mCreditCard;
-    private CharSequence mEmail;
     private BehaviorSubject<Boolean> creditCardValid = BehaviorSubject.create();
     private BehaviorSubject<Boolean> emailValid = BehaviorSubject.create();
 
@@ -26,13 +24,11 @@ public class StubPurchaseViewModel implements IPurchaseViewModel {
 
     @Override
     public void nextCreditCard(CharSequence creditCard) {
-        mCreditCard = creditCard;
         creditCardValid.onNext(creditCard.length() % 2 == 0);
     }
 
     @Override
     public void nextEmail(CharSequence email) {
-        mEmail = email;
         emailValid.onNext(email.length() % 2 == 0);
     }
 
