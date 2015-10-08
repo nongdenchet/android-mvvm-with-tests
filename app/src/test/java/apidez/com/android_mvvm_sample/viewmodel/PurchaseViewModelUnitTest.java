@@ -8,13 +8,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import apidez.com.android_mvvm_sample.api.ApiClient;
 import apidez.com.android_mvvm_sample.model.Purchase;
 import rx.Observable;
+import rx.observers.TestSubscriber;
 
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.verify;
@@ -38,80 +40,104 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void inputValidCreditCard() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
+        purchaseViewModel.creditCardValid().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412341234123");
-        assertTrue(purchaseViewModel.creditCardValid().toBlocking().first());
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
     }
 
     @Test
     public void inputInvalidCreditCard() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
+        purchaseViewModel.creditCardValid().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("4123");
-        assertFalse(purchaseViewModel.creditCardValid().toBlocking().first());
         purchaseViewModel.nextCreditCard("abcd");
-        assertFalse(purchaseViewModel.creditCardValid().toBlocking().first());
         purchaseViewModel.nextCreditCard("abcdabcdabcd");
-        assertFalse(purchaseViewModel.creditCardValid().toBlocking().first());
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertReceivedOnNext(Arrays.asList(false, false, false));
     }
 
     @Test
     public void inputValidEmail() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
+        purchaseViewModel.emailValid().subscribe(testSubscriber);
         purchaseViewModel.nextEmail("ndc@gmail.com");
-        assertTrue(purchaseViewModel.emailValid().toBlocking().first());
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
     }
 
     @Test
     public void inputInvalidEmail() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
+        purchaseViewModel.emailValid().subscribe(testSubscriber);
         purchaseViewModel.nextEmail("4123");
-        assertFalse(purchaseViewModel.emailValid().toBlocking().first());
         purchaseViewModel.nextEmail("iamdeveloper@");
-        assertFalse(purchaseViewModel.emailValid().toBlocking().first());
         purchaseViewModel.nextEmail("__123$$@gm.co");
-        assertFalse(purchaseViewModel.emailValid().toBlocking().first());
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertReceivedOnNext(Arrays.asList(false, false, false));
     }
 
     @Test
     public void canSubmit() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
+        purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
-        assertTrue(purchaseViewModel.canSubmit().toBlocking().first());
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
     }
 
     @Test
     public void cannotSubmitInvalidEmail() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
+        purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("ndc###@gmail.com");
-        assertFalse(purchaseViewModel.canSubmit().toBlocking().first());
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertReceivedOnNext(Collections.singletonList(false));
     }
 
     @Test
     public void cannotSubmitInvalidCreditCard() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
+        purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
-        assertFalse(purchaseViewModel.canSubmit().toBlocking().first());
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertReceivedOnNext(Collections.singletonList(false));
     }
 
     @Test
     public void cannotSubmitEmptyEmail() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
+        purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("");
-        assertFalse(purchaseViewModel.canSubmit().toBlocking().firstOrDefault(false));
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertReceivedOnNext(Collections.singletonList(false));
     }
 
     @Test
     public void cannotSubmitEmptyCreditCard() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
+        purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextEmail("ndc@gmail.com");
         purchaseViewModel.nextCreditCard("");
-        assertFalse(purchaseViewModel.canSubmit().toBlocking().firstOrDefault(false));
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertReceivedOnNext(Collections.singletonList(false));
     }
 
     @Test
     public void submit() throws Exception {
+        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         Purchase purchase = purchaseViewModel.getPurchase();
         when(apiClient.submitPurchase(purchase)).thenReturn(Observable.just(true));
-        boolean success = purchaseViewModel.submit().toBlocking().first();
+        purchaseViewModel.submit().subscribe(testSubscriber);
+        testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
         verify(apiClient).submitPurchase(purchase);
-        assertTrue(success);
     }
 
     @Test

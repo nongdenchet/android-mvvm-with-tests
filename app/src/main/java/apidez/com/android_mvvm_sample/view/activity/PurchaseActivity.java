@@ -80,19 +80,19 @@ public class PurchaseActivity extends BaseActivity {
     private void bindViewModel() {
         // binding credit card
         RxTextViewEx.textChanges(edtCreditCard)
-                .compose(bindToLifecycle())
+                .takeUntil(preDestroy())
                 .subscribe(viewModel::nextCreditCard);
 
         // binding email
         RxTextViewEx.textChanges(edtEmail)
-                .compose(bindToLifecycle())
+                .takeUntil(preDestroy())
                 .subscribe(viewModel::nextEmail);
 
         // create event on click on submit
         onSubmitClickListener = v -> viewModel.submit()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(bindToLifecycle())
+                .takeUntil(preDestroy())
                 .doOnSubscribe(progressDialog::show)
                 .subscribe(done -> {
                     ToastUtils.showLongToast(getApplicationContext(), R.string.success);
@@ -104,7 +104,7 @@ public class PurchaseActivity extends BaseActivity {
 
         // binding credit card change
         viewModel.creditCardValid()
-                .compose(bindToLifecycle())
+                .takeUntil(preDestroy())
                 .subscribe((enabled) -> {
                     layoutCreditCard.setError(getString(R.string.error_credit_card));
                     layoutCreditCard.setErrorEnabled(!enabled);
@@ -113,7 +113,7 @@ public class PurchaseActivity extends BaseActivity {
 
         // binding password change
         viewModel.emailValid()
-                .compose(bindToLifecycle())
+                .takeUntil(preDestroy())
                 .subscribe((enabled) -> {
                     layoutEmail.setError(getString(R.string.error_email));
                     layoutEmail.setErrorEnabled(!enabled);
@@ -122,7 +122,7 @@ public class PurchaseActivity extends BaseActivity {
 
         // can submit
         viewModel.canSubmit()
-                .compose(bindToLifecycle())
+                .takeUntil(preDestroy())
                 .subscribe(active -> {
                     btnSubmit.setBackgroundResource(active ? R.drawable.bg_submit : R.drawable.bg_inactive_submit);
                     btnSubmit.setOnClickListener(active ? onSubmitClickListener : null);

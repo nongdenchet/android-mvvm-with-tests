@@ -141,4 +141,12 @@ public class PurchaseActivityIntegrationTest {
         onView(withId(R.id.btnSubmit)).check(matches(hasResId(R.drawable.bg_submit)));
         onView(withId(R.id.btnSubmit)).perform(click());
     }
+
+    @Test
+    public void showProgressbar() throws Exception {
+        onView(withId(R.id.creditCard)).perform(typeText("411111111111"));
+        onView(withId(R.id.email)).perform(typeText("rain@gmail.com"));
+        onView(withId(R.id.btnSubmit)).perform(click());
+        onView(withText("Loading..."));
+    }
 }
