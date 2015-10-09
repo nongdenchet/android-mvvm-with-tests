@@ -31,16 +31,17 @@ public class PurchaseViewModelUnitTest {
 
     private PurchaseViewModel purchaseViewModel;
     private ApiClient apiClient;
+    private TestSubscriber<Boolean> testSubscriber;
 
     @Before
     public void setUpViewModel() {
         apiClient = Mockito.mock(ApiClient.class);
         purchaseViewModel = new PurchaseViewModel(apiClient);
+        testSubscriber = TestSubscriber.create();
     }
 
     @Test
     public void inputValidCreditCard() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.creditCardValid().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412341234123");
         testSubscriber.assertNoErrors();
@@ -49,7 +50,6 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void inputInvalidCreditCard() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.creditCardValid().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("4123");
         purchaseViewModel.nextCreditCard("abcd");
@@ -60,7 +60,6 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void inputValidEmail() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.emailValid().subscribe(testSubscriber);
         purchaseViewModel.nextEmail("ndc@gmail.com");
         testSubscriber.assertNoErrors();
@@ -69,7 +68,6 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void inputInvalidEmail() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.emailValid().subscribe(testSubscriber);
         purchaseViewModel.nextEmail("4123");
         purchaseViewModel.nextEmail("iamdeveloper@");
@@ -80,7 +78,6 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void canSubmit() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
@@ -90,7 +87,6 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void cannotSubmitInvalidEmail() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("ndc###@gmail.com");
@@ -100,7 +96,6 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void cannotSubmitInvalidCreditCard() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
@@ -110,7 +105,6 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void cannotSubmitEmptyEmail() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("");
@@ -120,7 +114,6 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void cannotSubmitEmptyCreditCard() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.canSubmit().subscribe(testSubscriber);
         purchaseViewModel.nextEmail("ndc@gmail.com");
         purchaseViewModel.nextCreditCard("");
@@ -130,7 +123,6 @@ public class PurchaseViewModelUnitTest {
 
     @Test
     public void submit() throws Exception {
-        TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         Purchase purchase = purchaseViewModel.getPurchase();
