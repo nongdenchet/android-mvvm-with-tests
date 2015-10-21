@@ -11,7 +11,7 @@ import dagger.Provides;
 @Module
 public class StubPurchaseModule {
     @Provides
-    public IPurchaseViewModel providePurchaseModule() {
+    public IPurchaseViewModel providePurchaseViewModel() {
         return new StubPurchaseViewModel();
     }
 }
