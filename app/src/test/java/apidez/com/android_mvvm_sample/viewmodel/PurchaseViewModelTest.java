@@ -150,10 +150,34 @@ public class PurchaseViewModelTest {
         );
         try {
             boolean success = purchaseViewModel.submit().toBlocking().first();
-            verify(purchaseApi).submitPurchase(purchase);
             if (success) fail("Should be timeout");
         } catch (Exception ignored) {
             // The test pass here, it should be timeout
+        }
+    }
+
+    @Test
+    public void submitOnTime() throws Exception {
+        purchaseViewModel.nextCreditCard("412123123341234123");
+        purchaseViewModel.nextEmail("ndc@gmail.com");
+        Purchase purchase = purchaseViewModel.getPurchase();
+        when(purchaseApi.submitPurchase(purchase)).thenReturn(
+                Observable.create(subscriber -> {
+                    try {
+                        Thread.sleep(4900);
+                        subscriber.onNext(true);
+                        subscriber.onCompleted();
+                    } catch (InterruptedException e) {
+                        subscriber.onError(e);
+                    }
+                })
+        );
+        try {
+            boolean success = purchaseViewModel.submit().toBlocking().first();
+            assertTrue(success);
+        } catch (Exception ignored) {
+            // The test pass here, it should be timeout
+            fail("Should be on time");
         }
     }
 
@@ -179,6 +203,30 @@ public class PurchaseViewModelTest {
             assertTrue(success);
         } catch (Exception ignored) {
             fail("Have to retry three times");
+        }
+    }
+
+    @Test
+    public void submitExceedRetry() throws Exception {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        purchaseViewModel.nextCreditCard("412123123341234123");
+        purchaseViewModel.nextEmail("ndc@gmail.com");
+        Purchase purchase = purchaseViewModel.getPurchase();
+        when(purchaseApi.submitPurchase(purchase)).thenReturn(
+                Observable.create(subscriber -> {
+                    if (atomicInteger.getAndIncrement() < 4) {
+                        subscriber.onError(new Exception());
+                    } else {
+                        subscriber.onNext(true);
+                        subscriber.onCompleted();
+                    }
+                })
+        );
+        try {
+            purchaseViewModel.submit().toBlocking().first();
+            fail("Should be out of retry");
+        } catch (Exception ignored) {
+            // Test pass here
         }
     }
 }

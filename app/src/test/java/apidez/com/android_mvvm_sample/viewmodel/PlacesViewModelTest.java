@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import apidez.com.android_mvvm_sample.api.PlacesApi;
 import apidez.com.android_mvvm_sample.model.GoogleSearchResult;
@@ -15,7 +16,10 @@ import apidez.com.android_mvvm_sample.model.Place;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -33,7 +37,7 @@ public class PlacesViewModelTest {
         placesViewModel = new PlacesViewModel(placesApi);
         testSubscriber = TestSubscriber.create();
         testSubscriberPlaces = TestSubscriber.create();
-        when(placesApi.placesResult()).thenReturn(testData());
+        when(placesApi.placesResult()).thenReturn(testDataObservable());
     }
 
     @Test
@@ -96,6 +100,91 @@ public class PlacesViewModelTest {
         assertEquals(lists.get(0).size(), 3);
     }
 
+    @Test
+    public void fetchTimeout() throws Exception {
+        when(placesApi.placesResult()).thenReturn(
+                Observable.create(subscriber -> {
+                    try {
+                        Thread.sleep(5100);
+                        subscriber.onNext(testData());
+                        subscriber.onCompleted();
+                    } catch (InterruptedException e) {
+                        subscriber.onError(e);
+                    }
+                })
+        );
+        try {
+            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
+            if (success) fail("Should be timeout");
+        } catch (Exception ignored) {
+            // The test pass here, it should be timeout
+        }
+    }
+
+    @Test
+    public void fetchOnTime() throws Exception {
+        when(placesApi.placesResult()).thenReturn(
+                Observable.create(subscriber -> {
+                    try {
+                        Thread.sleep(4900);
+                        subscriber.onNext(testData());
+                        subscriber.onCompleted();
+                    } catch (InterruptedException e) {
+                        subscriber.onError(e);
+                    }
+                })
+        );
+        try {
+            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
+            assertTrue(success);
+        } catch (Exception ignored) {
+            fail("Should be on time");
+        }
+    }
+
+    @Test
+    public void fetchRetry() throws Exception {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        when(placesApi.placesResult()).thenReturn(
+                Observable.create(subscriber -> {
+                    if (atomicInteger.getAndIncrement() < 3) {
+                        subscriber.onError(new Exception());
+                    } else {
+                        subscriber.onNext(testData());
+                        subscriber.onCompleted();
+                    }
+                })
+        );
+        try {
+            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
+            verify(placesApi).placesResult();
+            assertTrue(success);
+        } catch (Exception ignored) {
+            fail("Have to retry three times");
+        }
+    }
+
+    @Test
+    public void fetchExceedRetry() throws Exception {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        when(placesApi.placesResult()).thenReturn(
+                Observable.create(subscriber -> {
+                    if (atomicInteger.getAndIncrement() < 4) {
+                        subscriber.onError(new Exception());
+                    } else {
+                        subscriber.onNext(testData());
+                        subscriber.onCompleted();
+                    }
+                })
+        );
+        try {
+            placesViewModel.fetchAllPlaces().toBlocking().first();
+            fail("Should be out of retry");
+        } catch (Exception ignored) {
+            // Test pass here
+        }
+    }
+
     private List<List<Place>> getAndFilterWith(String type) {
         placesViewModel.fetchAllPlaces().subscribe();
         placesViewModel.filterPlacesByType(type);
@@ -104,11 +193,8 @@ public class PlacesViewModelTest {
         return testSubscriberPlaces.getOnNextEvents();
     }
 
-    private Observable<GoogleSearchResult> testData() {
-        GoogleSearchResult googleSearchResult = new GoogleSearchResult();
-        googleSearchResult.status = "OK";
+    private GoogleSearchResult testData() {
         List<Place> places = new ArrayList<>();
-        googleSearchResult.results = places;
         places.add(new Place.Builder().types(Arrays.asList("food", "cafe")).build());
         places.add(new Place.Builder().types(Arrays.asList("food", "movie_theater")).build());
         places.add(new Place.Builder().types(Arrays.asList("store")).build());
@@ -119,6 +205,14 @@ public class PlacesViewModelTest {
         places.add(new Place.Builder().types(Arrays.asList("restaurant", "cafe")).build());
         places.add(new Place.Builder().types(Arrays.asList("restaurant")).build());
         places.add(new Place.Builder().types(Arrays.asList("movie_theater", "cafe", "food")).build());
-        return Observable.just(googleSearchResult);
+
+        GoogleSearchResult googleSearchResult = new GoogleSearchResult();
+        googleSearchResult.status = "OK";
+        googleSearchResult.results = places;
+        return googleSearchResult;
+    }
+
+    private Observable<GoogleSearchResult> testDataObservable() {
+        return Observable.just(testData());
     }
 }
