@@ -12,12 +12,12 @@ import rx.Observable;
 /**
  * Created by nongdenchet on 10/3/15.
  */
-public class ApiClient {
+public class PurchaseApi {
 
     private Gson mGson;
 
     @Inject
-    public ApiClient(@NonNull Gson gson) {
+    public PurchaseApi(@NonNull Gson gson) {
         mGson = gson;
     }
 

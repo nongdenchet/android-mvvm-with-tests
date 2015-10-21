@@ -28,27 +28,27 @@ import rx.schedulers.Schedulers;
 public class PurchaseActivity extends BaseActivity {
 
     @Bind(R.id.creditCard)
-    EditText edtCreditCard;
+    EditText mEdtCreditCard;
 
     @Bind(R.id.email)
-    EditText edtEmail;
+    EditText mEdtEmail;
 
     @Bind(R.id.layoutCreditCard)
-    TextInputLayout layoutCreditCard;
+    TextInputLayout mLayoutCreditCard;
 
     @Bind(R.id.layoutEmail)
-    TextInputLayout layoutEmail;
+    TextInputLayout mLayoutEmail;
 
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
     @Bind(R.id.btnSubmit)
-    TextView btnSubmit;
+    TextView mBtnSubmit;
 
     @Inject
-    IPurchaseViewModel viewModel;
+    IPurchaseViewModel mViewModel;
 
-    private ProgressDialog progressDialog;
+    private ProgressDialog mProgressDialog;
     private View.OnClickListener onSubmitClickListener;
 
     @Override
@@ -57,7 +57,9 @@ public class PurchaseActivity extends BaseActivity {
         setContentView(R.layout.activity_calculate);
 
         // Setup dependency
-        ((DemoApplication) getApplication()).component().inject(this);
+        ((DemoApplication) getApplication())
+                .component()
+                .inject(this);
 
         // Setup butterknife
         ButterKnife.bind(this);
@@ -68,64 +70,65 @@ public class PurchaseActivity extends BaseActivity {
 
     private void setUpView() {
         // Progress dialog
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.setCancelable(false);
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.setCancelable(false);
 
         // Toolbar
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void bindViewModel() {
         // binding credit card
-        RxTextViewEx.textChanges(edtCreditCard)
+        RxTextViewEx.textChanges(mEdtCreditCard)
                 .takeUntil(preDestroy())
-                .subscribe(viewModel::nextCreditCard);
+                .subscribe(mViewModel::nextCreditCard);
 
         // binding email
-        RxTextViewEx.textChanges(edtEmail)
+        RxTextViewEx.textChanges(mEdtEmail)
                 .takeUntil(preDestroy())
-                .subscribe(viewModel::nextEmail);
+                .subscribe(mViewModel::nextEmail);
 
         // create event on click on submit
-        onSubmitClickListener = v -> viewModel.submit()
+        onSubmitClickListener = v -> mViewModel.submit()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .takeUntil(preDestroy())
-                .doOnSubscribe(progressDialog::show)
+                .doOnSubscribe(mProgressDialog::show)
+                .doOnTerminate(mProgressDialog::hide)
                 .subscribe(done -> {
                     ToastUtils.showLongToast(getApplicationContext(), R.string.success);
-                    progressDialog.hide();
                     finish();
                 }, throwable -> {
+                    throwable.printStackTrace();
                     ToastUtils.showLongToast(getApplicationContext(), R.string.error);
                 });
 
         // binding credit card change
-        viewModel.creditCardValid()
+        mViewModel.creditCardValid()
                 .takeUntil(preDestroy())
                 .subscribe((enabled) -> {
-                    layoutCreditCard.setError(getString(R.string.error_credit_card));
-                    layoutCreditCard.setErrorEnabled(!enabled);
-                    UiUtils.resetTintColor(this, edtCreditCard);
+                    mLayoutCreditCard.setError(getString(R.string.error_credit_card));
+                    mLayoutCreditCard.setErrorEnabled(!enabled);
+                    UiUtils.resetTintColor(this, mEdtCreditCard);
                 });
 
         // binding password change
-        viewModel.emailValid()
+        mViewModel.emailValid()
                 .takeUntil(preDestroy())
                 .subscribe((enabled) -> {
-                    layoutEmail.setError(getString(R.string.error_email));
-                    layoutEmail.setErrorEnabled(!enabled);
-                    UiUtils.resetTintColor(this, edtEmail);
+                    mLayoutEmail.setError(getString(R.string.error_email));
+                    mLayoutEmail.setErrorEnabled(!enabled);
+                    UiUtils.resetTintColor(this, mEdtEmail);
                 });
 
         // can submit
-        viewModel.canSubmit()
+        mViewModel.canSubmit()
                 .takeUntil(preDestroy())
                 .subscribe(active -> {
-                    btnSubmit.setBackgroundResource(active ? R.drawable.bg_submit : R.drawable.bg_inactive_submit);
-                    btnSubmit.setOnClickListener(active ? onSubmitClickListener : null);
+                    mBtnSubmit.setBackgroundResource(active ? R.drawable.bg_submit : R.drawable.bg_inactive_submit);
+                    mBtnSubmit.setOnClickListener(active ? onSubmitClickListener : null);
                 });
     }
 

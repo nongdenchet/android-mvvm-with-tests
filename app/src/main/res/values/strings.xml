@@ -95,4 +95,10 @@
     <string name="error_email">Invalid Email</string>
     <string name="success">Success</string>
     <string name="error">Error</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="icon_des">icon</string>
+    <string name="title_places">Places</string>
+    <string name="menu_places_sort">Sort</string>
 </resources>

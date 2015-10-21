@@ -7,7 +7,7 @@ import rx.subjects.BehaviorSubject;
 /**
  * Created by nongdenchet on 10/1/15.
  */
-public abstract class BaseActivity extends AppCompatActivity{
+public abstract class BaseActivity extends AppCompatActivity {
 
     private final BehaviorSubject<BaseActivity> preDestroy = BehaviorSubject.create();
 

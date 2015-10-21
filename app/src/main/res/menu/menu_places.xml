@@ -1,0 +1,41 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_sort"
+        android:title="@string/menu_places_sort"
+        android:icon="@drawable/ic_sort_white_36dp"
+        app:showAsAction="ifRoom|withText">
+        <menu>
+            <item
+                android:id="@+id/action_food"
+                android:title="Food"
+                app:showAsAction="withText"/>
+
+            <item
+                android:id="@+id/action_cafe"
+                android:title="Cafe"
+                app:showAsAction="withText"/>
+
+            <item
+                android:id="@+id/action_store"
+                android:title="Store"
+                app:showAsAction="withText"/>
+
+            <item
+                android:id="@+id/action_theater"
+                android:title="Theater"
+                app:showAsAction="withText"/>
+
+            <item
+                android:id="@+id/action_restaurant"
+                android:title="Restaurant"
+                app:showAsAction="withText"/>
+
+            <item
+                android:id="@+id/action_all"
+                android:title="All"
+                app:showAsAction="withText"/>
+        </menu>
+    </item>
+</menu>

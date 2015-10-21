@@ -21,13 +21,13 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(JUnit4.class)
 public class ApiClientTest {
 
-    private ApiClient apiClient;
+    private PurchaseApi apiClient;
     private Gson gson;
 
     @Before
     public void setUp() {
         gson = new Gson();
-        apiClient = new ApiClient(gson);
+        apiClient = new PurchaseApi(gson);
     }
 
     @Test

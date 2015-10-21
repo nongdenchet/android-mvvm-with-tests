@@ -4,7 +4,8 @@ import android.app.Application;
 
 import apidez.com.android_mvvm_sample.dependency.component.ApplicationComponent;
 import apidez.com.android_mvvm_sample.dependency.component.DaggerApplicationComponent;
-import apidez.com.android_mvvm_sample.dependency.module.ApiModule;
+import apidez.com.android_mvvm_sample.dependency.module.CommonModule;
+import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
 import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
 
 /**
@@ -19,8 +20,9 @@ public class DemoApplication extends Application {
         super.onCreate();
         if (component == null) {
             component = DaggerApplicationComponent.builder()
-                    .apiModule(new ApiModule())
+                    .commonModule(new CommonModule())
                     .purchaseModule(new PurchaseModule())
+                    .placesModule(new PlacesModule())
                     .build();
         }
     }

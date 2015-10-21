@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import apidez.com.android_mvvm_sample.api.ApiClient;
+import apidez.com.android_mvvm_sample.api.PurchaseApi;
 import apidez.com.android_mvvm_sample.model.Purchase;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -30,13 +30,13 @@ import static org.mockito.Mockito.when;
 public class PurchaseViewModelUnitTest {
 
     private PurchaseViewModel purchaseViewModel;
-    private ApiClient apiClient;
+    private PurchaseApi purchaseApi;
     private TestSubscriber<Boolean> testSubscriber;
 
     @Before
     public void setUpViewModel() {
-        apiClient = Mockito.mock(ApiClient.class);
-        purchaseViewModel = new PurchaseViewModel(apiClient);
+        purchaseApi = Mockito.mock(PurchaseApi.class);
+        purchaseViewModel = new PurchaseViewModel(purchaseApi);
         testSubscriber = TestSubscriber.create();
     }
 
@@ -126,10 +126,10 @@ public class PurchaseViewModelUnitTest {
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         Purchase purchase = purchaseViewModel.getPurchase();
-        when(apiClient.submitPurchase(purchase)).thenReturn(Observable.just(true));
+        when(purchaseApi.submitPurchase(purchase)).thenReturn(Observable.just(true));
         purchaseViewModel.submit().subscribe(testSubscriber);
         testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
-        verify(apiClient).submitPurchase(purchase);
+        verify(purchaseApi).submitPurchase(purchase);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class PurchaseViewModelUnitTest {
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         Purchase purchase = purchaseViewModel.getPurchase();
-        when(apiClient.submitPurchase(purchase)).thenReturn(
+        when(purchaseApi.submitPurchase(purchase)).thenReturn(
                 Observable.create(subscriber -> {
                     try {
                         Thread.sleep(5100);
@@ -150,7 +150,7 @@ public class PurchaseViewModelUnitTest {
         );
         try {
             boolean success = purchaseViewModel.submit().toBlocking().first();
-            verify(apiClient).submitPurchase(purchase);
+            verify(purchaseApi).submitPurchase(purchase);
             if (success) fail("Should be timeout");
         } catch (Exception ignored) {
             // The test pass here, it should be timeout
@@ -163,7 +163,7 @@ public class PurchaseViewModelUnitTest {
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         Purchase purchase = purchaseViewModel.getPurchase();
-        when(apiClient.submitPurchase(purchase)).thenReturn(
+        when(purchaseApi.submitPurchase(purchase)).thenReturn(
                 Observable.create(subscriber -> {
                     if (atomicInteger.getAndIncrement() < 3) {
                         subscriber.onError(new Exception());
@@ -175,7 +175,7 @@ public class PurchaseViewModelUnitTest {
         );
         try {
             boolean success = purchaseViewModel.submit().toBlocking().first();
-            verify(apiClient).submitPurchase(purchase);
+            verify(purchaseApi).submitPurchase(purchase);
             assertTrue(success);
         } catch (Exception ignored) {
             fail("Have to retry three times");
