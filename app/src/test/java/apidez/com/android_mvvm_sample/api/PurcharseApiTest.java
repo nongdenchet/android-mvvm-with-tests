@@ -19,7 +19,7 @@ import static junit.framework.Assert.assertTrue;
 
 @SmallTest
 @RunWith(JUnit4.class)
-public class ApiClientTest {
+public class PurcharseApiTest {
 
     private PurchaseApi apiClient;
     private Gson gson;

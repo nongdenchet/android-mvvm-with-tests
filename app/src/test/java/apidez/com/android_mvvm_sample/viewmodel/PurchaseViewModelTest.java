@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
  */
 @SmallTest
 @RunWith(JUnit4.class)
-public class PurchaseViewModelUnitTest {
+public class PurchaseViewModelTest {
 
     private PurchaseViewModel purchaseViewModel;
     private PurchaseApi purchaseApi;

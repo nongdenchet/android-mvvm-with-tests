@@ -23,10 +23,6 @@ public class MyTextView extends TextView {
         super(context, attrs, defStyleAttr);
     }
 
-    public MyTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
     @Override
     public void setBackgroundResource(int resId) {
         super.setBackgroundResource(resId);

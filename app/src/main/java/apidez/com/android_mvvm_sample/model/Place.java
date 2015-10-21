@@ -5,7 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by nongdenchet on 10/21/15.
@@ -21,7 +22,7 @@ public class Place implements Parcelable {
     private String name;
 
     @SerializedName("types")
-    ArrayList<String> types;
+    List<String> types;
 
     protected Place(Parcel in) {
         icon = in.readString();
@@ -42,6 +43,13 @@ public class Place implements Parcelable {
         }
     };
 
+    private Place(String icon, String id, String name, List<String> types) {
+        this.icon = icon;
+        this.id = id;
+        this.name = name;
+        this.types = types;
+    }
+
     public String getIcon() {
         return icon;
     }
@@ -54,7 +62,7 @@ public class Place implements Parcelable {
         return name;
     }
 
-    public ArrayList<String> getTypes() {
+    public List<String> getTypes() {
         return types;
     }
 
@@ -69,5 +77,31 @@ public class Place implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeStringList(types);
+    }
+
+    public static class Builder {
+        private String id = UUID.randomUUID().toString();
+        private String icon;
+        private String name;
+        List<String> types;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder icon(String icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        public Builder types(List<String> types) {
+            this.types = types;
+            return this;
+        }
+
+        public Place build() {
+            return new Place(icon, id, name, types);
+        }
     }
 }

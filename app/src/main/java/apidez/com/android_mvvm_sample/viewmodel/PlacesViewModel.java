@@ -17,7 +17,7 @@ import rx.subjects.BehaviorSubject;
 public class PlacesViewModel implements IPlacesViewModel {
 
     private PlacesApi mPlacesApi;
-    private final int TIME_OUT = 7;
+    private final int TIME_OUT = 5;
     private final int RETRY = 3;
     private List<Place> allPlaces = new ArrayList<>();
 

@@ -76,8 +76,7 @@ public class PlacesFragment extends BaseFragment {
         getActivityCompat().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Recyclerview setup
-        mPlacesAdapter = new PlacesAdapter(getActivity(), v -> {
-        });
+        mPlacesAdapter = new PlacesAdapter(getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mPlacesAdapter);
     }

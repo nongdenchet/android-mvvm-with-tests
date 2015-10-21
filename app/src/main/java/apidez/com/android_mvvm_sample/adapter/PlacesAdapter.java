@@ -24,12 +24,10 @@ import butterknife.ButterKnife;
 public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private View.OnClickListener mOnClickListener;
     private List<Place> mPlaces;
 
-    public PlacesAdapter(Context context, View.OnClickListener onClickListener) {
+    public PlacesAdapter(Context context) {
         mContext = context;
-        mOnClickListener = onClickListener;
         mPlaces = new ArrayList<>();
     }
 
@@ -42,11 +40,14 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         PlaceViewHolder holder = (PlaceViewHolder) viewHolder;
-        holder.itemView.setOnClickListener(mOnClickListener);
+        holder.itemView.setOnClickListener(v -> {});
 
         Place place = mPlaces.get(position);
         holder.name.setText(place.getName());
-        Picasso.with(mContext).load(place.getIcon()).into(holder.icon);
+        Picasso.with(mContext)
+                .load(place.getIcon())
+                .placeholder(R.drawable.ic_place_36dp)
+                .into(holder.icon);
     }
 
     @Override
