@@ -39,8 +39,8 @@ public class PlacesViewModel implements IPlacesViewModel {
      * Command fetching all places
      */
     @Override
-    public Observable<Boolean> fetchAllPlaces() {
-        return mPlacesApi.placesResult()
+    public Observable<Boolean> fetchAllPlaces(String location, double radius) {
+        return mPlacesApi.placesResult(location, radius)
                 .map(googleSearchResult -> {
                     allPlaces = googleSearchResult.results;
                     mPlaces.onNext(googleSearchResult.results);

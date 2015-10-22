@@ -1,8 +1,6 @@
 package apidez.com.android_mvvm_sample.view.activity;
 
-import android.app.Instrumentation;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -13,10 +11,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.application.DemoApplication;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerTestComponent;
-import apidez.com.android_mvvm_sample.dependency.component.TestComponent;
+import apidez.com.android_mvvm_sample.dependency.component.DaggerStubTestComponent;
+import apidez.com.android_mvvm_sample.dependency.component.StubTestComponent;
 import apidez.com.android_mvvm_sample.dependency.module.StubPurchaseModule;
+import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -47,15 +45,11 @@ public class PurchaseActivityTest {
 
     @Before
     public void setUp() throws Exception {
-        // Set up the application
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        DemoApplication app = (DemoApplication) instrumentation.getTargetContext().getApplicationContext();
-
         // Setup test component
-        TestComponent component = DaggerTestComponent.builder()
+        StubTestComponent component = DaggerStubTestComponent.builder()
                 .stubPurchaseModule(new StubPurchaseModule())
                 .build();
-        app.setComponent(component);
+        ApplicationUtils.application().setComponent(component);
 
         // Run the activity
         activityTestRule.launchActivity(new Intent());

@@ -1,8 +1,6 @@
 package apidez.com.android_mvvm_sample.view.fragment;
 
-import android.app.Instrumentation;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -13,16 +11,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.application.DemoApplication;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerTestComponent;
-import apidez.com.android_mvvm_sample.dependency.component.TestComponent;
+import apidez.com.android_mvvm_sample.dependency.component.DaggerStubTestComponent;
+import apidez.com.android_mvvm_sample.dependency.component.StubTestComponent;
 import apidez.com.android_mvvm_sample.dependency.module.StubPlacesModule;
+import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import apidez.com.android_mvvm_sample.view.activity.EmptyActivity;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasMaxLines;
 
 /**
@@ -38,15 +38,11 @@ public class PlacesFragmentTest {
 
     @Before
     public void setUp() throws Exception {
-        // Set up the application
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        DemoApplication app = (DemoApplication) instrumentation.getTargetContext().getApplicationContext();
-
         // Setup test component
-        TestComponent component = DaggerTestComponent.builder()
+        StubTestComponent component = DaggerStubTestComponent.builder()
                 .stubPlacesModule(new StubPlacesModule())
                 .build();
-        app.setComponent(component);
+        ApplicationUtils.application().setComponent(component);
 
         activityTestRule.launchActivity(new Intent());
         activityTestRule.getActivity()
@@ -54,11 +50,28 @@ public class PlacesFragmentTest {
                 .beginTransaction()
                 .replace(android.R.id.content, PlacesFragment.newInstance())
                 .commit();
+
+        // TODO: fix this problem
+        // Sometime espresso cannot find the view with id: "R.id.action_sort"
+        // Maybe the view has not been completed rendered
+        // Currently put it to sleep 1000ms
+        Thread.sleep(1000);
     }
 
     @Test
     public void maxLinesOfTextView() throws Exception {
         onView(withId(R.id.name)).check(matches(isDisplayed()));
         onView(withId(R.id.name)).check(matches(hasMaxLines(2)));
+    }
+
+    @Test
+    public void optionMenus() throws Exception {
+        onView(withId(R.id.action_sort)).check(matches(isDisplayed()));
+        onView(withId(R.id.action_sort)).perform(click());
+        onView(withText("Food")).check(matches(isDisplayed()));
+        onView(withText("Cafe")).check(matches(isDisplayed()));
+        onView(withText("Store")).check(matches(isDisplayed()));
+        onView(withText("Theater")).check(matches(isDisplayed()));
+        onView(withText("All")).check(matches(isDisplayed()));
     }
 }

@@ -2,9 +2,9 @@ package apidez.com.android_mvvm_sample.application;
 
 import android.app.Application;
 
-import apidez.com.android_mvvm_sample.dependency.component.ApplicationComponent;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerApplicationComponent;
-import apidez.com.android_mvvm_sample.dependency.module.CommonModule;
+import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
+import apidez.com.android_mvvm_sample.dependency.component.DaggerAppComponent;
+import apidez.com.android_mvvm_sample.dependency.module.AppModule;
 import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
 import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
 
@@ -13,25 +13,27 @@ import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
  */
 public class DemoApplication extends Application {
 
-    private ApplicationComponent component;
+    private AppComponent appComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        if (component == null) {
-            component = DaggerApplicationComponent.builder()
-                    .commonModule(new CommonModule())
+
+        // Create app component
+        if (appComponent == null) {
+            appComponent = DaggerAppComponent.builder()
+                    .appModule(new AppModule())
                     .purchaseModule(new PurchaseModule())
                     .placesModule(new PlacesModule())
                     .build();
         }
     }
 
-    public void setComponent(ApplicationComponent component) {
-        this.component = component;
+    public AppComponent component() {
+        return appComponent;
     }
 
-    public ApplicationComponent component() {
-        return component;
+    public void setComponent(AppComponent appComponent) {
+        this.appComponent = appComponent;
     }
 }

@@ -2,8 +2,6 @@ package apidez.com.android_mvvm_sample.dependency.module;
 
 import com.google.gson.Gson;
 
-import javax.inject.Singleton;
-
 import apidez.com.android_mvvm_sample.api.PurchaseApi;
 import apidez.com.android_mvvm_sample.viewmodel.IPurchaseViewModel;
 import apidez.com.android_mvvm_sample.viewmodel.PurchaseViewModel;
@@ -16,8 +14,7 @@ import dagger.Provides;
 @Module
 public class PurchaseModule {
     @Provides
-    @Singleton
-    public PurchaseApi provideApiClient(Gson gson) {
+    public PurchaseApi providePurchaseApi(Gson gson) {
         return new PurchaseApi(gson);
     }
 

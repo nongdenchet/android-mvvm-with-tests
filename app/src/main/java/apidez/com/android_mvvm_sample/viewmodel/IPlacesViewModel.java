@@ -13,7 +13,7 @@ public interface IPlacesViewModel {
     /**
      * Fetch all places from google
      */
-    Observable<Boolean> fetchAllPlaces();
+    Observable<Boolean> fetchAllPlaces(String location, double radius);
 
     /**
      * Observe current places

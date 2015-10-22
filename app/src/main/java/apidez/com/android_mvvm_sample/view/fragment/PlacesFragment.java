@@ -37,6 +37,8 @@ public class PlacesFragment extends BaseFragment {
 
     private ProgressDialog mProgressDialog;
     private PlacesAdapter mPlacesAdapter;
+    private String LOCATION = "10.7864422,106.677516";
+    private double RADIUS = 500;
 
     public static PlacesFragment newInstance() {
         PlacesFragment fragment = new PlacesFragment();
@@ -92,7 +94,7 @@ public class PlacesFragment extends BaseFragment {
                 .subscribe(mPlacesAdapter::updatePlaces);
 
         // fetch all places
-        mViewModel.fetchAllPlaces()
+        mViewModel.fetchAllPlaces(LOCATION, RADIUS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .takeUntil(preDestroy())
@@ -122,6 +124,7 @@ public class PlacesFragment extends BaseFragment {
             case R.id.action_store:
             case R.id.action_theater:
             case R.id.action_restaurant:
+            case R.id.action_all:
                 // Filter the items
                 mViewModel.filterPlacesByType(item.getTitle().toString().toLowerCase());
                 return true;

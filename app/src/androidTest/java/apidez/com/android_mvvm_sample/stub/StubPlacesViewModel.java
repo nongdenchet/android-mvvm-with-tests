@@ -11,9 +11,13 @@ import rx.Observable;
 /**
  * Created by nongdenchet on 10/21/15.
  */
+
+/**
+ * UI only related test
+ */
 public class StubPlacesViewModel implements IPlacesViewModel {
     @Override
-    public Observable<Boolean> fetchAllPlaces() {
+    public Observable<Boolean> fetchAllPlaces(String location, double radius) {
         return Observable.just(true);
     }
 
@@ -25,5 +29,6 @@ public class StubPlacesViewModel implements IPlacesViewModel {
 
     @Override
     public void filterPlacesByType(String type) {
+
     }
 }

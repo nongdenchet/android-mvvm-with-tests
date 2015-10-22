@@ -11,6 +11,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import apidez.com.android_mvvm_sample.R;
+import apidez.com.android_mvvm_sample.dependency.component.DaggerTestComponent;
+import apidez.com.android_mvvm_sample.dependency.component.TestComponent;
+import apidez.com.android_mvvm_sample.dependency.module.LocalPurchaseModule;
+import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -42,6 +46,11 @@ public class PurchaseActivityIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
+        // Setup test component
+        TestComponent component = DaggerTestComponent.builder()
+                .localPurchaseModule(new LocalPurchaseModule())
+                .build();
+        ApplicationUtils.application().setComponent(component);
         activityTestRule.launchActivity(new Intent());
     }
 

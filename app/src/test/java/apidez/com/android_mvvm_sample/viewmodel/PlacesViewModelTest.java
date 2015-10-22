@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import apidez.com.android_mvvm_sample.api.PlacesApi;
 import apidez.com.android_mvvm_sample.model.GoogleSearchResult;
 import apidez.com.android_mvvm_sample.model.Place;
+import apidez.com.android_mvvm_sample.utils.TestDataUtils;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
@@ -30,6 +29,8 @@ public class PlacesViewModelTest {
     private PlacesApi placesApi;
     private TestSubscriber<Boolean> testSubscriber;
     private TestSubscriber<List<Place>> testSubscriberPlaces;
+    private String LOCATION = "location";
+    private int RADIUS = 100;
 
     @Before
     public void setUpViewModel() {
@@ -37,12 +38,12 @@ public class PlacesViewModelTest {
         placesViewModel = new PlacesViewModel(placesApi);
         testSubscriber = TestSubscriber.create();
         testSubscriberPlaces = TestSubscriber.create();
-        when(placesApi.placesResult()).thenReturn(testDataObservable());
+        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(testDataObservable());
     }
 
     @Test
     public void fetchAllPlacesSuccess() {
-        placesViewModel.fetchAllPlaces().subscribe(testSubscriber);
+        placesViewModel.fetchAllPlaces(LOCATION, RADIUS).subscribe(testSubscriber);
         testSubscriber.assertNoErrors();
         testSubscriber.assertCompleted();
         testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
@@ -50,7 +51,7 @@ public class PlacesViewModelTest {
 
     @Test
     public void fetchAllPlaces() {
-        placesViewModel.fetchAllPlaces().subscribe();
+        placesViewModel.fetchAllPlaces(LOCATION, RADIUS).subscribe();
         placesViewModel.currentPlaces().subscribe(testSubscriberPlaces);
         testSubscriberPlaces.assertNoErrors();
         List<List<Place>> lists = testSubscriberPlaces.getOnNextEvents();
@@ -60,53 +61,47 @@ public class PlacesViewModelTest {
 
     @Test
     public void filterAll() {
-        List<List<Place>> lists = getAndFilterWith("all");
-        assertEquals(lists.size(), 1);
-        assertEquals(lists.get(0).size(), 10);
+        assertEquals(getAndFilterWith("all").size(), 10);
+        getAndFilterWith("cafe");
+        assertEquals(getAndFilterWith("all").size(), 10);
     }
 
     @Test
     public void filterFood() {
-        List<List<Place>> lists = getAndFilterWith("food");
-        assertEquals(lists.size(), 1);
-        assertEquals(lists.get(0).size(), 4);
+        assertEquals(getAndFilterWith("food").size(), 4);
+        getAndFilterWith("cafe");
+        assertEquals(getAndFilterWith("food").size(), 4);
     }
 
     @Test
     public void filterCafe() {
-        List<List<Place>> lists = getAndFilterWith("cafe");
-        assertEquals(lists.size(), 1);
-        assertEquals(lists.get(0).size(), 5);
+        assertEquals(getAndFilterWith("cafe").size(), 5);
     }
 
     @Test
     public void filterStore() {
-        List<List<Place>> lists = getAndFilterWith("store");
-        assertEquals(lists.size(), 1);
-        assertEquals(lists.get(0).size(), 4);
+        assertEquals(getAndFilterWith("store").size(), 4);
     }
 
     @Test
     public void filterRestaurant() {
-        List<List<Place>> lists = getAndFilterWith("restaurant");
-        assertEquals(lists.size(), 1);
-        assertEquals(lists.get(0).size(), 3);
+        assertEquals(getAndFilterWith("restaurant").size(), 3);
+        getAndFilterWith("cafe");
+        assertEquals(getAndFilterWith("restaurant").size(), 3);
     }
 
     @Test
     public void filterTheater() {
-        List<List<Place>> lists = getAndFilterWith("theater");
-        assertEquals(lists.size(), 1);
-        assertEquals(lists.get(0).size(), 3);
+        assertEquals(getAndFilterWith("theater").size(), 3);
     }
 
     @Test
     public void fetchTimeout() throws Exception {
-        when(placesApi.placesResult()).thenReturn(
+        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(
                 Observable.create(subscriber -> {
                     try {
                         Thread.sleep(5100);
-                        subscriber.onNext(testData());
+                        subscriber.onNext(TestDataUtils.nearByData());
                         subscriber.onCompleted();
                     } catch (InterruptedException e) {
                         subscriber.onError(e);
@@ -114,7 +109,7 @@ public class PlacesViewModelTest {
                 })
         );
         try {
-            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
+            boolean success = placesViewModel.fetchAllPlaces(LOCATION, RADIUS).toBlocking().first();
             if (success) fail("Should be timeout");
         } catch (Exception ignored) {
             // The test pass here, it should be timeout
@@ -123,11 +118,11 @@ public class PlacesViewModelTest {
 
     @Test
     public void fetchOnTime() throws Exception {
-        when(placesApi.placesResult()).thenReturn(
+        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(
                 Observable.create(subscriber -> {
                     try {
                         Thread.sleep(4900);
-                        subscriber.onNext(testData());
+                        subscriber.onNext(TestDataUtils.nearByData());
                         subscriber.onCompleted();
                     } catch (InterruptedException e) {
                         subscriber.onError(e);
@@ -135,7 +130,7 @@ public class PlacesViewModelTest {
                 })
         );
         try {
-            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
+            boolean success = placesViewModel.fetchAllPlaces(LOCATION, RADIUS).toBlocking().first();
             assertTrue(success);
         } catch (Exception ignored) {
             fail("Should be on time");
@@ -145,19 +140,19 @@ public class PlacesViewModelTest {
     @Test
     public void fetchRetry() throws Exception {
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        when(placesApi.placesResult()).thenReturn(
+        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(
                 Observable.create(subscriber -> {
                     if (atomicInteger.getAndIncrement() < 3) {
                         subscriber.onError(new Exception());
                     } else {
-                        subscriber.onNext(testData());
+                        subscriber.onNext(TestDataUtils.nearByData());
                         subscriber.onCompleted();
                     }
                 })
         );
         try {
-            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
-            verify(placesApi).placesResult();
+            boolean success = placesViewModel.fetchAllPlaces(LOCATION, RADIUS).toBlocking().first();
+            verify(placesApi).placesResult(LOCATION, RADIUS);
             assertTrue(success);
         } catch (Exception ignored) {
             fail("Have to retry three times");
@@ -167,52 +162,34 @@ public class PlacesViewModelTest {
     @Test
     public void fetchExceedRetry() throws Exception {
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        when(placesApi.placesResult()).thenReturn(
+        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(
                 Observable.create(subscriber -> {
                     if (atomicInteger.getAndIncrement() < 4) {
                         subscriber.onError(new Exception());
                     } else {
-                        subscriber.onNext(testData());
+                        subscriber.onNext(TestDataUtils.nearByData());
                         subscriber.onCompleted();
                     }
                 })
         );
         try {
-            placesViewModel.fetchAllPlaces().toBlocking().first();
+            placesViewModel.fetchAllPlaces(LOCATION, RADIUS).toBlocking().first();
             fail("Should be out of retry");
         } catch (Exception ignored) {
             // Test pass here
         }
     }
 
-    private List<List<Place>> getAndFilterWith(String type) {
-        placesViewModel.fetchAllPlaces().subscribe();
+    private List<Place> getAndFilterWith(String type) {
+        placesViewModel.fetchAllPlaces(LOCATION, RADIUS).subscribe();
         placesViewModel.filterPlacesByType(type);
         placesViewModel.currentPlaces().subscribe(testSubscriberPlaces);
         testSubscriberPlaces.assertNoErrors();
-        return testSubscriberPlaces.getOnNextEvents();
-    }
-
-    private GoogleSearchResult testData() {
-        List<Place> places = new ArrayList<>();
-        places.add(new Place.Builder().types(Arrays.asList("food", "cafe")).build());
-        places.add(new Place.Builder().types(Arrays.asList("food", "movie_theater")).build());
-        places.add(new Place.Builder().types(Arrays.asList("store")).build());
-        places.add(new Place.Builder().types(Arrays.asList("store")).build());
-        places.add(new Place.Builder().types(Arrays.asList("cafe")).build());
-        places.add(new Place.Builder().types(Arrays.asList("food", "store", "cafe", "movie_theater")).build());
-        places.add(new Place.Builder().types(Arrays.asList("restaurant", "store")).build());
-        places.add(new Place.Builder().types(Arrays.asList("restaurant", "cafe")).build());
-        places.add(new Place.Builder().types(Arrays.asList("restaurant")).build());
-        places.add(new Place.Builder().types(Arrays.asList("movie_theater", "cafe", "food")).build());
-
-        GoogleSearchResult googleSearchResult = new GoogleSearchResult();
-        googleSearchResult.status = "OK";
-        googleSearchResult.results = places;
-        return googleSearchResult;
+        List<List<Place>> lists = testSubscriberPlaces.getOnNextEvents();
+        return lists.get(lists.size() - 1);
     }
 
     private Observable<GoogleSearchResult> testDataObservable() {
-        return Observable.just(testData());
+        return Observable.just(TestDataUtils.nearByData());
     }
 }

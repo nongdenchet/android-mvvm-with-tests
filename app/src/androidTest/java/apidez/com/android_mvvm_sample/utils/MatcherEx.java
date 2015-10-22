@@ -2,6 +2,7 @@ package apidez.com.android_mvvm_sample.utils;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,7 +18,7 @@ import apidez.com.android_mvvm_sample.view.custom.MyTextView;
 public class MatcherEx {
 
     /**
-     * Returns a matcher that matches {@link View}s resourceId
+     * Returns a matcher that matches {@link MyTextView}s resourceId
      */
     public static Matcher<View> hasResId(int resId) {
         return new TypeSafeMatcher<View>() {
@@ -55,6 +56,9 @@ public class MatcherEx {
         };
     }
 
+    /**
+     * Returns a matcher that matches {@link TextView}s has maxLines
+     */
     public static Matcher<View> hasMaxLines(int max) {
         return new TypeSafeMatcher<View>() {
             @Override
@@ -62,10 +66,33 @@ public class MatcherEx {
                 description.appendText("has max lines");
             }
 
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public boolean matchesSafely(View view) {
                 try {
                     return ((TextView) view).getMaxLines() <= max;
+                } catch (Exception exception) {
+                    return false;
+                }
+            }
+        };
+    }
+
+    /**
+     * Returns a matcher that matches {@link RecyclerView}s has exactly item counts
+     */
+    public static Matcher<View> hasItemCount(int count) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("has items");
+            }
+
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public boolean matchesSafely(View view) {
+                try {
+                    return ((RecyclerView) view).getAdapter().getItemCount() == count;
                 } catch (Exception exception) {
                     return false;
                 }
