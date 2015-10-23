@@ -10,11 +10,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import apidez.com.android_mvvm_sample.ComponentBuilder;
 import apidez.com.android_mvvm_sample.R;
 import apidez.com.android_mvvm_sample.api.PlacesApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerAppComponent;
+import apidez.com.android_mvvm_sample.dependency.component.PlacesComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
+import apidez.com.android_mvvm_sample.dependency.scope.ViewScope;
 import apidez.com.android_mvvm_sample.stub.StubPlacesViewModel;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import apidez.com.android_mvvm_sample.view.activity.EmptyActivity;
@@ -42,16 +44,22 @@ public class PlacesFragmentTest {
 
     @Before
     public void setUp() throws Exception {
+        PlacesModule stubModule = new PlacesModule() {
+            @Provides
+            @ViewScope
+            public IPlacesViewModel providePlacesViewModel(PlacesApi placesApi) {
+                return new StubPlacesViewModel();
+            }
+        };
+
         // Setup test component
-        AppComponent component = DaggerAppComponent.builder()
-                .placesModule(new PlacesModule() {
-                    @Provides
-                    public IPlacesViewModel providePlacesViewModel(PlacesApi placesApi) {
-                        return new StubPlacesViewModel();
-                    }
-                })
-                .build();
-        ApplicationUtils.application().setComponent(component);
+        AppComponent component = ApplicationUtils.application().component();
+        ApplicationUtils.application().setComponentBuilder(new ComponentBuilder(component) {
+            @Override
+            public PlacesComponent placesComponent() {
+                return component.plus(stubModule);
+            }
+        });
 
         activityTestRule.launchActivity(new Intent());
         activityTestRule.getActivity()

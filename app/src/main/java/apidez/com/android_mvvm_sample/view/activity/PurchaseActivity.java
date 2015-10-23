@@ -58,7 +58,8 @@ public class PurchaseActivity extends BaseActivity {
 
         // Setup dependency
         ((MyApplication) getApplication())
-                .component()
+                .builder()
+                .purchaseComponent()
                 .inject(this);
 
         // Setup butterknife
@@ -98,11 +99,10 @@ public class PurchaseActivity extends BaseActivity {
                 .doOnSubscribe(mProgressDialog::show)
                 .doOnTerminate(mProgressDialog::hide)
                 .subscribe(done -> {
-                    ToastUtils.showLongToast(getApplicationContext(), R.string.success);
-                    finish();
+                    ToastUtils.showLongToast(this, R.string.success);
                 }, throwable -> {
                     throwable.printStackTrace();
-                    ToastUtils.showLongToast(getApplicationContext(), R.string.error);
+                    ToastUtils.showLongToast(this, R.string.error);
                 });
 
         // binding credit card change

@@ -19,6 +19,7 @@ import rx.observers.TestSubscriber;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,7 +36,11 @@ public class PurchaseViewModelTest {
 
     @Before
     public void setUpViewModel() {
+        // Mock purchase api
         purchaseApi = Mockito.mock(PurchaseApi.class);
+        when(purchaseApi.submitPurchase(any(Purchase.class))).thenReturn(Observable.just(true));
+
+        // Create test viewmodel
         purchaseViewModel = new PurchaseViewModel(purchaseApi);
         testSubscriber = TestSubscriber.create();
     }
@@ -126,7 +131,6 @@ public class PurchaseViewModelTest {
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         Purchase purchase = purchaseViewModel.getPurchase();
-        when(purchaseApi.submitPurchase(purchase)).thenReturn(Observable.just(true));
         purchaseViewModel.submit().subscribe(testSubscriber);
         testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
         verify(purchaseApi).submitPurchase(purchase);

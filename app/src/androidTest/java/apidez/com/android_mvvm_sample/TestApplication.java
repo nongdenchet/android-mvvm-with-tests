@@ -7,6 +7,10 @@ import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
  */
 public class TestApplication extends MyApplication {
     public void setComponent(AppComponent appComponent) {
-        this.appComponent = appComponent;
+        this.mAppComponent = appComponent;
+    }
+
+    public void setComponentBuilder(ComponentBuilder componentBuilder) {
+        this.mComponentBuilder = componentBuilder;
     }
 }

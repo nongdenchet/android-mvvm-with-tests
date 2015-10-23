@@ -11,10 +11,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
+import apidez.com.android_mvvm_sample.ComponentBuilder;
 import apidez.com.android_mvvm_sample.R;
 import apidez.com.android_mvvm_sample.api.PlacesApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerAppComponent;
+import apidez.com.android_mvvm_sample.dependency.component.PlacesComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import apidez.com.android_mvvm_sample.utils.TestDataUtils;
@@ -44,19 +45,24 @@ public class PlacesFragmentIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
+        PlacesModule mockModule = new PlacesModule() {
+            @Provides
+            public PlacesApi providePlacesApi() {
+                PlacesApi placesApi = Mockito.mock(PlacesApi.class);
+                when(placesApi.placesResult(any(String.class), any(Double.class)))
+                        .thenReturn(Observable.just(TestDataUtils.nearByData()));
+                return placesApi;
+            }
+        };
+
         // Setup test component
-        AppComponent component = DaggerAppComponent.builder()
-                .placesModule(new PlacesModule() {
-                    @Provides
-                    public PlacesApi providePlacesApi() {
-                        PlacesApi placesApi = Mockito.mock(PlacesApi.class);
-                        when(placesApi.placesResult(any(String.class), any(Double.class)))
-                                .thenReturn(Observable.just(TestDataUtils.nearByData()));
-                        return placesApi;
-                    }
-                })
-                .build();
-        ApplicationUtils.application().setComponent(component);
+        AppComponent component = ApplicationUtils.application().component();
+        ApplicationUtils.application().setComponentBuilder(new ComponentBuilder(component) {
+            @Override
+            public PlacesComponent placesComponent() {
+                return component.plus(mockModule);
+            }
+        });
 
         activityTestRule.launchActivity(new Intent());
         activityTestRule.getActivity()

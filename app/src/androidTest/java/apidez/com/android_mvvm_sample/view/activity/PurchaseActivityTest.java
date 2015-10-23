@@ -10,11 +10,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import apidez.com.android_mvvm_sample.ComponentBuilder;
 import apidez.com.android_mvvm_sample.R;
 import apidez.com.android_mvvm_sample.api.PurchaseApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerAppComponent;
+import apidez.com.android_mvvm_sample.dependency.component.PurchaseComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
+import apidez.com.android_mvvm_sample.dependency.scope.ViewScope;
 import apidez.com.android_mvvm_sample.stub.StubPurchaseViewModel;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import apidez.com.android_mvvm_sample.viewmodel.IPurchaseViewModel;
@@ -28,6 +30,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static apidez.com.android_mvvm_sample.utils.MatcherEx.checkToast;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasListener;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasResId;
 import static org.hamcrest.Matchers.not;
@@ -49,16 +52,22 @@ public class PurchaseActivityTest {
 
     @Before
     public void setUp() throws Exception {
+        PurchaseModule stubModule = new PurchaseModule() {
+            @Provides
+            @ViewScope
+            IPurchaseViewModel providePurchaseViewModel(PurchaseApi purchaseApi) {
+                return new StubPurchaseViewModel();
+            }
+        };
+
         // Setup test component
-        AppComponent component = DaggerAppComponent.builder()
-                .purchaseModule(new PurchaseModule() {
-                    @Provides
-                    public IPurchaseViewModel providePurchaseViewModel(PurchaseApi purchaseApi) {
-                        return new StubPurchaseViewModel();
-                    }
-                })
-                .build();
-        ApplicationUtils.application().setComponent(component);
+        AppComponent component = ApplicationUtils.application().component();
+        ApplicationUtils.application().setComponentBuilder(new ComponentBuilder(component) {
+            @Override
+            public PurchaseComponent purchaseComponent() {
+                return component.plus(stubModule);
+            }
+        });
 
         // Run the activity
         activityTestRule.launchActivity(new Intent());
@@ -116,14 +125,13 @@ public class PurchaseActivityTest {
         onView(withId(R.id.creditCard)).perform(typeText("I am"));
         onView(withId(R.id.btnSubmit)).check(matches(hasListener()));
         onView(withId(R.id.btnSubmit)).check(matches(hasResId(R.drawable.bg_submit)));
-        onView(withId(R.id.btnSubmit)).perform(click());
     }
 
     @Test
-    public void showProgressbar() throws Exception {
+    public void submitSuccess() throws Exception {
         onView(withId(R.id.email)).perform(typeText("I am"));
         onView(withId(R.id.creditCard)).perform(typeText("I am"));
         onView(withId(R.id.btnSubmit)).perform(click());
-        onView(withText("Loading..."));
+        checkToast(R.string.success, activityTestRule.getActivity());
     }
 }

@@ -56,7 +56,8 @@ public class PlacesFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         ((MyApplication) getActivity().getApplication())
-                .component()
+                .builder()
+                .placesComponent()
                 .inject(this);
     }
 
