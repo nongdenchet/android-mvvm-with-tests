@@ -13,7 +13,12 @@ import dagger.Provides;
 @Module
 public class PlacesModule {
     @Provides
-    IPlacesViewModel providePlacesViewModel() {
-        return new PlacesViewModel(RetrofitUtils.create(PlacesApi.class, "https://maps.googleapis.com/maps/api/place/"));
+    public PlacesApi providePlacesApi() {
+        return RetrofitUtils.create(PlacesApi.class, "https://maps.googleapis.com/maps/api/place/");
+    }
+
+    @Provides
+    public IPlacesViewModel providePlacesViewModel(PlacesApi placesApi) {
+        return new PlacesViewModel(placesApi);
     }
 }

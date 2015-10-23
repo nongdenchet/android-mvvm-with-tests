@@ -11,10 +11,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerStubTestComponent;
-import apidez.com.android_mvvm_sample.dependency.component.StubTestComponent;
-import apidez.com.android_mvvm_sample.dependency.module.StubPurchaseModule;
+import apidez.com.android_mvvm_sample.api.PurchaseApi;
+import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
+import apidez.com.android_mvvm_sample.dependency.component.DaggerAppComponent;
+import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
+import apidez.com.android_mvvm_sample.stub.StubPurchaseViewModel;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
+import apidez.com.android_mvvm_sample.viewmodel.IPurchaseViewModel;
+import dagger.Provides;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -46,8 +50,13 @@ public class PurchaseActivityTest {
     @Before
     public void setUp() throws Exception {
         // Setup test component
-        StubTestComponent component = DaggerStubTestComponent.builder()
-                .stubPurchaseModule(new StubPurchaseModule())
+        AppComponent component = DaggerAppComponent.builder()
+                .purchaseModule(new PurchaseModule() {
+                    @Provides
+                    public IPurchaseViewModel providePurchaseViewModel(PurchaseApi purchaseApi) {
+                        return new StubPurchaseViewModel();
+                    }
+                })
                 .build();
         ApplicationUtils.application().setComponent(component);
 

@@ -9,12 +9,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerTestComponent;
-import apidez.com.android_mvvm_sample.dependency.component.TestComponent;
-import apidez.com.android_mvvm_sample.dependency.module.LocalPurchaseModule;
+import apidez.com.android_mvvm_sample.api.PurchaseApi;
+import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
+import apidez.com.android_mvvm_sample.dependency.component.DaggerAppComponent;
+import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
+import apidez.com.android_mvvm_sample.model.Purchase;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
+import dagger.Provides;
+import rx.Observable;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -28,6 +33,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasListener;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasResId;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by nongdenchet on 10/3/15.
@@ -47,8 +54,15 @@ public class PurchaseActivityIntegrationTest {
     @Before
     public void setUp() throws Exception {
         // Setup test component
-        TestComponent component = DaggerTestComponent.builder()
-                .localPurchaseModule(new LocalPurchaseModule())
+        AppComponent component = DaggerAppComponent.builder()
+                .purchaseModule(new PurchaseModule() {
+                    @Provides
+                    public PurchaseApi providePurchasesApi() {
+                        PurchaseApi purchaseApi = Mockito.mock(PurchaseApi.class);
+                        when(purchaseApi.submitPurchase(any(Purchase.class))).thenReturn(Observable.just(true));
+                        return purchaseApi;
+                    }
+                })
                 .build();
         ApplicationUtils.application().setComponent(component);
         activityTestRule.launchActivity(new Intent());

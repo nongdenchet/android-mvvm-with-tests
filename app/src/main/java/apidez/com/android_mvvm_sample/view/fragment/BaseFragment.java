@@ -1,7 +1,6 @@
 package apidez.com.android_mvvm_sample.view.fragment;
 
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 
 import rx.subjects.BehaviorSubject;
 
@@ -19,9 +18,5 @@ public abstract class BaseFragment extends Fragment {
     public void onDestroyView() {
         preDestroy.onNext(this);
         super.onDestroyView();
-    }
-
-    public AppCompatActivity getActivityCompat() {
-        return (AppCompatActivity) getActivity();
     }
 }

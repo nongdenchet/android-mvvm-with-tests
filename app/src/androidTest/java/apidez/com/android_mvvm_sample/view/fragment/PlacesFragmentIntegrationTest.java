@@ -9,13 +9,18 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mockito;
 
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerTestComponent;
-import apidez.com.android_mvvm_sample.dependency.component.TestComponent;
-import apidez.com.android_mvvm_sample.dependency.module.LocalPlacesModule;
+import apidez.com.android_mvvm_sample.api.PlacesApi;
+import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
+import apidez.com.android_mvvm_sample.dependency.component.DaggerAppComponent;
+import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
+import apidez.com.android_mvvm_sample.utils.TestDataUtils;
 import apidez.com.android_mvvm_sample.view.activity.EmptyActivity;
+import dagger.Provides;
+import rx.Observable;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -23,6 +28,8 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasItemCount;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by nongdenchet on 10/22/15.
@@ -38,8 +45,16 @@ public class PlacesFragmentIntegrationTest {
     @Before
     public void setUp() throws Exception {
         // Setup test component
-        TestComponent component = DaggerTestComponent.builder()
-                .localPlacesModule(new LocalPlacesModule())
+        AppComponent component = DaggerAppComponent.builder()
+                .placesModule(new PlacesModule() {
+                    @Provides
+                    public PlacesApi providePlacesApi() {
+                        PlacesApi placesApi = Mockito.mock(PlacesApi.class);
+                        when(placesApi.placesResult(any(String.class), any(Double.class)))
+                                .thenReturn(Observable.just(TestDataUtils.nearByData()));
+                        return placesApi;
+                    }
+                })
                 .build();
         ApplicationUtils.application().setComponent(component);
 

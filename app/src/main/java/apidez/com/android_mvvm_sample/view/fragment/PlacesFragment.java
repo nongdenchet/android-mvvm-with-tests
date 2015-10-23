@@ -2,6 +2,7 @@ package apidez.com.android_mvvm_sample.view.fragment;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +17,7 @@ import javax.inject.Inject;
 
 import apidez.com.android_mvvm_sample.R;
 import apidez.com.android_mvvm_sample.adapter.PlacesAdapter;
-import apidez.com.android_mvvm_sample.application.DemoApplication;
+import apidez.com.android_mvvm_sample.MyApplication;
 import apidez.com.android_mvvm_sample.utils.ToastUtils;
 import apidez.com.android_mvvm_sample.viewmodel.IPlacesViewModel;
 import butterknife.Bind;
@@ -54,7 +55,7 @@ public class PlacesFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        ((DemoApplication) getActivityCompat().getApplication())
+        ((MyApplication) getActivity().getApplication())
                 .component()
                 .inject(this);
     }
@@ -69,13 +70,13 @@ public class PlacesFragment extends BaseFragment {
 
     private void setupView() {
         // Progress dialog setup
-        mProgressDialog = new ProgressDialog(getActivityCompat());
-        mProgressDialog.setMessage("Loading...");
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.setCancelable(false);
 
         // Actionbar setup
-        getActivityCompat().setSupportActionBar(mToolbar);
-        getActivityCompat().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Recyclerview setup
         mPlacesAdapter = new PlacesAdapter(getActivity());
@@ -103,7 +104,7 @@ public class PlacesFragment extends BaseFragment {
                 .subscribe(succes -> {
                 }, throwable -> {
                     throwable.printStackTrace();
-                    ToastUtils.showLongToast(getActivityCompat(), R.string.error);
+                    ToastUtils.showLongToast(getActivity(), R.string.error);
                 });
     }
 
@@ -117,7 +118,7 @@ public class PlacesFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getActivityCompat().onBackPressed();
+                getActivity().onBackPressed();
                 return true;
             case R.id.action_cafe:
             case R.id.action_food:

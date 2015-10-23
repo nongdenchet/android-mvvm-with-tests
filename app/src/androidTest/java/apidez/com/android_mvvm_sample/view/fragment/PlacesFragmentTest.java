@@ -11,11 +11,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.dependency.component.DaggerStubTestComponent;
-import apidez.com.android_mvvm_sample.dependency.component.StubTestComponent;
-import apidez.com.android_mvvm_sample.dependency.module.StubPlacesModule;
+import apidez.com.android_mvvm_sample.api.PlacesApi;
+import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
+import apidez.com.android_mvvm_sample.dependency.component.DaggerAppComponent;
+import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
+import apidez.com.android_mvvm_sample.stub.StubPlacesViewModel;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import apidez.com.android_mvvm_sample.view.activity.EmptyActivity;
+import apidez.com.android_mvvm_sample.viewmodel.IPlacesViewModel;
+import dagger.Provides;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -39,8 +43,13 @@ public class PlacesFragmentTest {
     @Before
     public void setUp() throws Exception {
         // Setup test component
-        StubTestComponent component = DaggerStubTestComponent.builder()
-                .stubPlacesModule(new StubPlacesModule())
+        AppComponent component = DaggerAppComponent.builder()
+                .placesModule(new PlacesModule() {
+                    @Provides
+                    public IPlacesViewModel providePlacesViewModel(PlacesApi placesApi) {
+                        return new StubPlacesViewModel();
+                    }
+                })
                 .build();
         ApplicationUtils.application().setComponent(component);
 

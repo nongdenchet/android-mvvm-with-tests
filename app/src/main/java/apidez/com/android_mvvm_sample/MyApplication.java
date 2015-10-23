@@ -1,4 +1,4 @@
-package apidez.com.android_mvvm_sample.application;
+package apidez.com.android_mvvm_sample;
 
 import android.app.Application;
 
@@ -11,9 +11,9 @@ import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
 /**
  * Created by nongdenchet on 10/2/15.
  */
-public class DemoApplication extends Application {
+public class MyApplication extends Application {
 
-    private AppComponent appComponent;
+    protected AppComponent appComponent;
 
     @Override
     public void onCreate() {
@@ -31,9 +31,5 @@ public class DemoApplication extends Application {
 
     public AppComponent component() {
         return appComponent;
-    }
-
-    public void setComponent(AppComponent appComponent) {
-        this.appComponent = appComponent;
     }
 }

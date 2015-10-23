@@ -12,7 +12,7 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.application.DemoApplication;
+import apidez.com.android_mvvm_sample.MyApplication;
 import apidez.com.android_mvvm_sample.utils.RxTextViewEx;
 import apidez.com.android_mvvm_sample.utils.ToastUtils;
 import apidez.com.android_mvvm_sample.utils.UiUtils;
@@ -57,7 +57,7 @@ public class PurchaseActivity extends BaseActivity {
         setContentView(R.layout.activity_calculate);
 
         // Setup dependency
-        ((DemoApplication) getApplication())
+        ((MyApplication) getApplication())
                 .component()
                 .inject(this);
 
@@ -71,7 +71,7 @@ public class PurchaseActivity extends BaseActivity {
     private void setUpView() {
         // Progress dialog
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.setCancelable(false);
 
         // Toolbar
