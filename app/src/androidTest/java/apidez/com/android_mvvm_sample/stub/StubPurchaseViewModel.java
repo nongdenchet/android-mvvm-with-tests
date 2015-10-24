@@ -34,12 +34,21 @@ public class StubPurchaseViewModel implements IPurchaseViewModel {
 
     @Override
     public Observable<Boolean> canSubmit() {
-        return Observable.combineLatest(creditCardValid(), emailValid(),
-                (creditCard, email) -> creditCard && email);
+        return creditCardValid.asObservable();
     }
 
     @Override
     public Observable<Boolean> submit() {
-        return Observable.just(true);
+        return Observable.create(subscriber -> {
+            try {
+                Thread.sleep(2000);
+                int foo = (emailValid.getValue()) ? 1 : 0;
+                foo = 12 / foo;
+                subscriber.onNext(true);
+                subscriber.onCompleted();
+            } catch (Exception ex) {
+                subscriber.onError(ex);
+            }
+        });
     }
 }

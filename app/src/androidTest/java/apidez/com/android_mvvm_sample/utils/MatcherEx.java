@@ -1,7 +1,6 @@
 package apidez.com.android_mvvm_sample.utils;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,31 +14,13 @@ import apidez.com.android_mvvm_sample.view.custom.MyTextView;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 
 /**
  * Created by nongdenchet on 10/3/15.
  */
 public class MatcherEx {
-
-    /**
-     * Check toast with messId
-     */
-    public static void checkToast(int messId, Activity activity) {
-        onView(withText(messId)).inRoot(withDecorView(not(activity.getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
-    }
-
-    /**
-     * Check toast with string
-     */
-    public static void checkToast(String mess, Activity activity) {
-        onView(withText(mess)).inRoot(withDecorView(not(activity.getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
-    }
 
     /**
      * Returns a matcher that matches {@link MyTextView}s resourceId
@@ -122,5 +103,13 @@ public class MatcherEx {
                 }
             }
         };
+    }
+
+    /**
+     * Perform action of waiting for a specific view text.
+     */
+    public static void waitText(final String viewText, final long millis) throws Exception {
+        Thread.sleep(millis);
+        onView(withText(viewText)).check(matches(isDisplayed()));
     }
 }

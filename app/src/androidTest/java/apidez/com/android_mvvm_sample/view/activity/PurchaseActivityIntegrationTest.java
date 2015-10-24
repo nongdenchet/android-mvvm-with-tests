@@ -24,7 +24,6 @@ import dagger.Provides;
 import rx.Observable;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -32,9 +31,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static apidez.com.android_mvvm_sample.utils.MatcherEx.checkToast;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasListener;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasResId;
+import static apidez.com.android_mvvm_sample.utils.MatcherEx.waitText;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -89,25 +88,11 @@ public class PurchaseActivityIntegrationTest {
     public void hasNoErrorCreditCard() throws Exception {
         onView((withId(R.id.creditCard))).perform(typeText("411111111111"));
         onView(withText(R.string.error_credit_card)).check(doesNotExist());
-        onView(withId(R.id.creditCard)).perform(clearText());
-        onView((withId(R.id.creditCard))).perform(typeText("422233111111"));
-        onView(withText(R.string.error_credit_card)).check(doesNotExist());
-        onView(withId(R.id.creditCard)).perform(clearText());
-        onView((withId(R.id.creditCard))).perform(typeText("123455656223"));
-        onView(withText(R.string.error_credit_card)).check(doesNotExist());
     }
 
     @Test
     public void hasErrorCreditCard() throws Exception {
         onView(withId(R.id.creditCard)).perform(typeText("abcdefabcdef"));
-        onView(withText(R.string.error_credit_card)).check(matches(isDisplayed()));
-        onView(withId(R.id.creditCard)).perform(clearText());
-        onView(withId(R.id.creditCard)).perform(typeText("1234"));
-        onView(withText(R.string.error_credit_card)).check(matches(isDisplayed()));
-        onView(withId(R.id.creditCard)).perform(clearText());
-        onView(withId(R.id.creditCard)).perform(typeText("I am naruto"));
-        onView(withText(R.string.error_credit_card)).check(matches(isDisplayed()));
-        onView(withId(R.id.creditCard)).perform(clearText());
         onView(withText(R.string.error_credit_card)).check(matches(isDisplayed()));
     }
 
@@ -115,25 +100,11 @@ public class PurchaseActivityIntegrationTest {
     public void hasNoErrorEmail() throws Exception {
         onView(withId(R.id.email)).perform(typeText("abc@abc.com"));
         onView(withText(R.string.error_email)).check(doesNotExist());
-        onView(withId(R.id.email)).perform(clearText());
-        onView(withId(R.id.email)).perform(typeText("ndc@google.com"));
-        onView(withText(R.string.error_email)).check(doesNotExist());
-        onView(withId(R.id.email)).perform(clearText());
-        onView(withId(R.id.email)).perform(typeText("flickr@hn.co"));
-        onView(withText(R.string.error_email)).check(doesNotExist());
     }
 
     @Test
     public void hasErrorEmail() throws Exception {
         onView(withId(R.id.email)).perform(typeText("abc___#!@...com"));
-        onView(withText(R.string.error_email)).check(matches(isDisplayed()));
-        onView(withId(R.id.email)).perform(clearText());
-        onView(withId(R.id.email)).perform(typeText("ndc123.com"));
-        onView(withText(R.string.error_email)).check(matches(isDisplayed()));
-        onView(withId(R.id.email)).perform(clearText());
-        onView(withId(R.id.email)).perform(typeText("____ac##@friend.com"));
-        onView(withText(R.string.error_email)).check(matches(isDisplayed()));
-        onView(withId(R.id.email)).perform(clearText());
         onView(withText(R.string.error_email)).check(matches(isDisplayed()));
     }
 
@@ -180,6 +151,16 @@ public class PurchaseActivityIntegrationTest {
         onView(withId(R.id.creditCard)).perform(typeText("411111111111"));
         onView(withId(R.id.email)).perform(typeText("rain@gmail.com"));
         onView(withId(R.id.btnSubmit)).perform(click());
-        checkToast(R.string.success, activityTestRule.getActivity());
+        onView(withText(R.string.loading)).check(matches(isDisplayed()));
+        waitText("Success", 3000);
+    }
+
+    @Test
+    public void submitFail() throws Exception {
+        onView(withId(R.id.creditCard)).perform(typeText("411111111111"));
+        onView(withId(R.id.email)).perform(typeText("apidez@gmail.com"));
+        onView(withId(R.id.btnSubmit)).perform(click());
+        onView(withText(R.string.loading)).check(matches(isDisplayed()));
+        waitText("Error", 3000);
     }
 }

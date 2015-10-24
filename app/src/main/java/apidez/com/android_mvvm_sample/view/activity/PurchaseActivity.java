@@ -11,10 +11,9 @@ import android.widget.TextView;
 
 import javax.inject.Inject;
 
-import apidez.com.android_mvvm_sample.R;
 import apidez.com.android_mvvm_sample.MyApplication;
+import apidez.com.android_mvvm_sample.R;
 import apidez.com.android_mvvm_sample.utils.RxTextViewEx;
-import apidez.com.android_mvvm_sample.utils.ToastUtils;
 import apidez.com.android_mvvm_sample.utils.UiUtils;
 import apidez.com.android_mvvm_sample.viewmodel.IPurchaseViewModel;
 import butterknife.Bind;
@@ -99,10 +98,9 @@ public class PurchaseActivity extends BaseActivity {
                 .doOnSubscribe(mProgressDialog::show)
                 .doOnTerminate(mProgressDialog::hide)
                 .subscribe(done -> {
-                    ToastUtils.showLongToast(this, R.string.success);
+                    UiUtils.showDialog(getString(R.string.success), this);
                 }, throwable -> {
-                    throwable.printStackTrace();
-                    ToastUtils.showLongToast(this, R.string.error);
+                    UiUtils.showDialog(getString(R.string.error), this);
                 });
 
         // binding credit card change

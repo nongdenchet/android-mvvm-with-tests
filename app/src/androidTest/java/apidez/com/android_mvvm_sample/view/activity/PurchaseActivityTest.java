@@ -30,9 +30,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static apidez.com.android_mvvm_sample.utils.MatcherEx.checkToast;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasListener;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasResId;
+import static apidez.com.android_mvvm_sample.utils.MatcherEx.waitText;
 import static org.hamcrest.Matchers.not;
 
 /**
@@ -104,34 +104,33 @@ public class PurchaseActivityTest {
     }
 
     @Test
-    public void cannotSubmitCreditCard() throws Exception {
+    public void cannotSubmit() throws Exception {
         onView(withId(R.id.creditCard)).perform(typeText("123"));
-        onView(withId(R.id.email)).perform(typeText("1234"));
-        onView(withId(R.id.btnSubmit)).check(matches(not(hasListener())));
-        onView(withId(R.id.btnSubmit)).check(matches(hasResId(R.drawable.bg_inactive_submit)));
-    }
-
-    @Test
-    public void cannotSubmitEmail() throws Exception {
-        onView(withId(R.id.email)).perform(typeText("123"));
-        onView(withId(R.id.creditCard)).perform(typeText("1234"));
         onView(withId(R.id.btnSubmit)).check(matches(not(hasListener())));
         onView(withId(R.id.btnSubmit)).check(matches(hasResId(R.drawable.bg_inactive_submit)));
     }
 
     @Test
     public void canSubmit() throws Exception {
-        onView(withId(R.id.email)).perform(typeText("I am"));
-        onView(withId(R.id.creditCard)).perform(typeText("I am"));
+        onView(withId(R.id.creditCard)).perform(typeText("abcd"));
         onView(withId(R.id.btnSubmit)).check(matches(hasListener()));
         onView(withId(R.id.btnSubmit)).check(matches(hasResId(R.drawable.bg_submit)));
     }
 
     @Test
     public void submitSuccess() throws Exception {
-        onView(withId(R.id.email)).perform(typeText("I am"));
-        onView(withId(R.id.creditCard)).perform(typeText("I am"));
+        onView(withId(R.id.email)).perform(typeText("abcd"));
+        onView(withId(R.id.creditCard)).perform(typeText("abcd"));
         onView(withId(R.id.btnSubmit)).perform(click());
-        checkToast(R.string.success, activityTestRule.getActivity());
+        onView(withText(R.string.loading)).check(matches(isDisplayed()));
+        waitText("Success", 3000);
+    }
+
+    @Test
+    public void submitFail() throws Exception {
+        onView(withId(R.id.creditCard)).perform(typeText("abcd"));
+        onView(withId(R.id.btnSubmit)).perform(click());
+        onView(withText(R.string.loading)).check(matches(isDisplayed()));
+        waitText("Error", 3000);
     }
 }

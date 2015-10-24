@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import javax.inject.Inject;
-
 import apidez.com.android_mvvm_sample.model.Purchase;
 import rx.Observable;
 
@@ -13,10 +11,8 @@ import rx.Observable;
  * Created by nongdenchet on 10/3/15.
  */
 public class PurchaseApi {
-
     private Gson mGson;
 
-    @Inject
     public PurchaseApi(@NonNull Gson gson) {
         mGson = gson;
     }
