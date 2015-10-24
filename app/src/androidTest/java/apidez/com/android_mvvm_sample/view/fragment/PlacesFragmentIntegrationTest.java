@@ -20,7 +20,6 @@ import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import apidez.com.android_mvvm_sample.utils.TestDataUtils;
 import apidez.com.android_mvvm_sample.view.activity.EmptyActivity;
-import dagger.Provides;
 import rx.Observable;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -46,7 +45,7 @@ public class PlacesFragmentIntegrationTest {
     @Before
     public void setUp() throws Exception {
         PlacesModule mockModule = new PlacesModule() {
-            @Provides
+            @Override
             public IPlacesApi providePlacesApi() {
                 IPlacesApi placesApi = Mockito.mock(IPlacesApi.class);
                 when(placesApi.placesResult(any(String.class), any(Double.class)))

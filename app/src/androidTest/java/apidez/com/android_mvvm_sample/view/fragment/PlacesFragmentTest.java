@@ -16,12 +16,10 @@ import apidez.com.android_mvvm_sample.api.IPlacesApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
 import apidez.com.android_mvvm_sample.dependency.component.PlacesComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
-import apidez.com.android_mvvm_sample.dependency.scope.ViewScope;
 import apidez.com.android_mvvm_sample.stub.StubPlacesViewModel;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import apidez.com.android_mvvm_sample.view.activity.EmptyActivity;
 import apidez.com.android_mvvm_sample.viewmodel.IPlacesViewModel;
-import dagger.Provides;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -45,8 +43,7 @@ public class PlacesFragmentTest {
     @Before
     public void setUp() throws Exception {
         PlacesModule stubModule = new PlacesModule() {
-            @Provides
-            @ViewScope
+            @Override
             public IPlacesViewModel providePlacesViewModel(IPlacesApi placesApi) {
                 return new StubPlacesViewModel();
             }

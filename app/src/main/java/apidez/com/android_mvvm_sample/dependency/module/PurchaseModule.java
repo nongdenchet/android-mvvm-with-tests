@@ -23,7 +23,7 @@ public class PurchaseModule {
 
     @Provides
     @ViewScope
-    IPurchaseViewModel providePurchaseViewModel(IPurchaseApi purchaseApi) {
+    public IPurchaseViewModel providePurchaseViewModel(IPurchaseApi purchaseApi) {
         return new PurchaseViewModel(purchaseApi);
     }
 }

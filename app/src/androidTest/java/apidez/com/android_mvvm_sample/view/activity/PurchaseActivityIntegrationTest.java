@@ -18,9 +18,8 @@ import apidez.com.android_mvvm_sample.api.IPurchaseApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
 import apidez.com.android_mvvm_sample.dependency.component.PurchaseComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
-import apidez.com.android_mvvm_sample.dependency.scope.ViewScope;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
-import dagger.Provides;
+import apidez.com.android_mvvm_sample.utils.UiUtils;
 import rx.Observable;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -55,8 +54,7 @@ public class PurchaseActivityIntegrationTest {
     @Before
     public void setUp() throws Exception {
         PurchaseModule mockModule = new PurchaseModule() {
-            @Provides
-            @ViewScope
+            @Override
             public IPurchaseApi providePurchaseApi(Gson gson) {
                 return purchase -> Observable.create(subscriber -> {
                     try {
@@ -158,6 +156,7 @@ public class PurchaseActivityIntegrationTest {
     public void submitSuccess() throws Exception {
         onView(withId(R.id.creditCard)).perform(typeText("411111111111"));
         onView(withId(R.id.email)).perform(typeText("rain@gmail.com"));
+        UiUtils.closeKeyboard(activityTestRule.getActivity());
         onView(withId(R.id.btnSubmit)).perform(click());
         onView(withText(R.string.loading)).check(matches(isDisplayed()));
         waitText("Success", 3000);
@@ -167,6 +166,7 @@ public class PurchaseActivityIntegrationTest {
     public void submitFail() throws Exception {
         onView(withId(R.id.creditCard)).perform(typeText(FAIL_CARD));
         onView(withId(R.id.email)).perform(typeText("apidez@gmail.com"));
+        UiUtils.closeKeyboard(activityTestRule.getActivity());
         onView(withId(R.id.btnSubmit)).perform(click());
         onView(withText(R.string.loading)).check(matches(isDisplayed()));
         waitText("Error", 10000); // A little bit long because it has three retry

@@ -19,6 +19,7 @@ import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
 import apidez.com.android_mvvm_sample.dependency.scope.ViewScope;
 import apidez.com.android_mvvm_sample.stub.StubPurchaseViewModel;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
+import apidez.com.android_mvvm_sample.utils.UiUtils;
 import apidez.com.android_mvvm_sample.viewmodel.IPurchaseViewModel;
 import dagger.Provides;
 
@@ -55,7 +56,7 @@ public class PurchaseActivityTest {
         PurchaseModule stubModule = new PurchaseModule() {
             @Provides
             @ViewScope
-            IPurchaseViewModel providePurchaseViewModel(IPurchaseApi purchaseApi) {
+            public IPurchaseViewModel providePurchaseViewModel(IPurchaseApi purchaseApi) {
                 return new StubPurchaseViewModel();
             }
         };
@@ -121,6 +122,7 @@ public class PurchaseActivityTest {
     public void submitSuccess() throws Exception {
         onView(withId(R.id.email)).perform(typeText("abcd"));
         onView(withId(R.id.creditCard)).perform(typeText("abcd"));
+        UiUtils.closeKeyboard(activityTestRule.getActivity());
         onView(withId(R.id.btnSubmit)).perform(click());
         onView(withText(R.string.loading)).check(matches(isDisplayed()));
         waitText("Success", 3000);
@@ -129,6 +131,7 @@ public class PurchaseActivityTest {
     @Test
     public void submitFail() throws Exception {
         onView(withId(R.id.creditCard)).perform(typeText("abcd"));
+        UiUtils.closeKeyboard(activityTestRule.getActivity());
         onView(withId(R.id.btnSubmit)).perform(click());
         onView(withText(R.string.loading)).check(matches(isDisplayed()));
         waitText("Error", 3000);
