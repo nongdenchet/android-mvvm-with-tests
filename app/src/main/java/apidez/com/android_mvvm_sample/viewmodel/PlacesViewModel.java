@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import apidez.com.android_mvvm_sample.api.PlacesApi;
+import apidez.com.android_mvvm_sample.api.IPlacesApi;
 import apidez.com.android_mvvm_sample.model.Place;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
@@ -16,12 +16,12 @@ import rx.subjects.BehaviorSubject;
  */
 public class PlacesViewModel implements IPlacesViewModel {
 
-    private PlacesApi mPlacesApi;
+    private IPlacesApi mPlacesApi;
     private final int TIME_OUT = 5;
     private final int RETRY = 3;
     private List<Place> allPlaces = new ArrayList<>();
 
-    public PlacesViewModel(@NonNull PlacesApi placesApi) {
+    public PlacesViewModel(@NonNull IPlacesApi placesApi) {
         mPlacesApi = placesApi;
     }
 

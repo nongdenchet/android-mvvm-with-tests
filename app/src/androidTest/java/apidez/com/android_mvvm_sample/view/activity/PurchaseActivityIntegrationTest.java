@@ -5,20 +5,20 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.MediumTest;
 
+import com.google.gson.Gson;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 import apidez.com.android_mvvm_sample.ComponentBuilder;
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.api.PurchaseApi;
+import apidez.com.android_mvvm_sample.api.IPurchaseApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
 import apidez.com.android_mvvm_sample.dependency.component.PurchaseComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
 import apidez.com.android_mvvm_sample.dependency.scope.ViewScope;
-import apidez.com.android_mvvm_sample.model.Purchase;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import dagger.Provides;
 import rx.Observable;
@@ -35,8 +35,6 @@ import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasListener;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasResId;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.waitText;
 import static org.hamcrest.Matchers.not;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by nongdenchet on 10/3/15.
@@ -48,6 +46,7 @@ import static org.mockito.Mockito.when;
 @MediumTest
 @RunWith(AndroidJUnit4.class)
 public class PurchaseActivityIntegrationTest {
+    private String FAIL_CARD = "222222222222";
 
     @Rule
     public ActivityTestRule<PurchaseActivity> activityTestRule =
@@ -58,10 +57,19 @@ public class PurchaseActivityIntegrationTest {
         PurchaseModule mockModule = new PurchaseModule() {
             @Provides
             @ViewScope
-            public PurchaseApi providePurchasesApi() {
-                PurchaseApi purchaseApi = Mockito.mock(PurchaseApi.class);
-                when(purchaseApi.submitPurchase(any(Purchase.class))).thenReturn(Observable.just(true));
-                return purchaseApi;
+            public IPurchaseApi providePurchaseApi(Gson gson) {
+                return purchase -> Observable.create(subscriber -> {
+                    try {
+                        Thread.sleep(2000);
+                        if (purchase.getCreditCard().equals(FAIL_CARD))
+                            throw new Exception("Invalid card");
+                        subscriber.onNext(true);
+                        subscriber.onCompleted();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        subscriber.onError(ex);
+                    }
+                });
             }
         };
 
@@ -139,7 +147,7 @@ public class PurchaseActivityIntegrationTest {
     }
 
     @Test
-    public void canSubmit() throws Exception {
+    public void  canSubmit() throws Exception {
         onView(withId(R.id.creditCard)).perform(typeText("411111111111"));
         onView(withId(R.id.email)).perform(typeText("rain@gmail.com"));
         onView(withId(R.id.btnSubmit)).check(matches(hasListener()));
@@ -157,10 +165,10 @@ public class PurchaseActivityIntegrationTest {
 
     @Test
     public void submitFail() throws Exception {
-        onView(withId(R.id.creditCard)).perform(typeText("411111111111"));
+        onView(withId(R.id.creditCard)).perform(typeText(FAIL_CARD));
         onView(withId(R.id.email)).perform(typeText("apidez@gmail.com"));
         onView(withId(R.id.btnSubmit)).perform(click());
         onView(withText(R.string.loading)).check(matches(isDisplayed()));
-        waitText("Error", 3000);
+        waitText("Error", 10000); // A little bit long because it has three retry
     }
 }

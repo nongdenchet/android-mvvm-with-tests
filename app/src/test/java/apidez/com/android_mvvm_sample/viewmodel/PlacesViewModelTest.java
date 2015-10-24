@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import apidez.com.android_mvvm_sample.api.PlacesApi;
+import apidez.com.android_mvvm_sample.api.IPlacesApi;
 import apidez.com.android_mvvm_sample.model.GoogleSearchResult;
 import apidez.com.android_mvvm_sample.model.Place;
 import apidez.com.android_mvvm_sample.utils.TestDataUtils;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
  */
 public class PlacesViewModelTest {
     private PlacesViewModel placesViewModel;
-    private PlacesApi placesApi;
+    private IPlacesApi placesApi;
     private TestSubscriber<Boolean> testSubscriber;
     private TestSubscriber<List<Place>> testSubscriberPlaces;
     private String LOCATION = "location";
@@ -34,7 +34,7 @@ public class PlacesViewModelTest {
 
     @Before
     public void setUpViewModel() {
-        placesApi = Mockito.mock(PlacesApi.class);
+        placesApi = Mockito.mock(IPlacesApi.class);
         placesViewModel = new PlacesViewModel(placesApi);
         testSubscriber = TestSubscriber.create();
         testSubscriberPlaces = TestSubscriber.create();

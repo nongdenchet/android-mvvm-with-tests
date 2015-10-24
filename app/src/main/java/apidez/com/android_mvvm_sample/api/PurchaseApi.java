@@ -10,7 +10,7 @@ import rx.Observable;
 /**
  * Created by nongdenchet on 10/3/15.
  */
-public class PurchaseApi {
+public class PurchaseApi implements IPurchaseApi {
     private Gson mGson;
 
     public PurchaseApi(@NonNull Gson gson) {

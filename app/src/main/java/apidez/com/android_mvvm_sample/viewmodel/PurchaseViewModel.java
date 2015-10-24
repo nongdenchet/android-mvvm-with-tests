@@ -4,9 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-
-import apidez.com.android_mvvm_sample.api.PurchaseApi;
+import apidez.com.android_mvvm_sample.api.IPurchaseApi;
 import apidez.com.android_mvvm_sample.model.Purchase;
 import apidez.com.android_mvvm_sample.utils.NumericUtils;
 import rx.Observable;
@@ -17,14 +15,13 @@ import rx.subjects.BehaviorSubject;
  */
 public class PurchaseViewModel implements IPurchaseViewModel {
 
-    private PurchaseApi mPurchaseApi;
+    private IPurchaseApi mPurchaseApi;
     private final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final int TIME_OUT = 5;
     private final int RETRY = 3;
 
-    @Inject
-    public PurchaseViewModel(@NonNull PurchaseApi purchaseApi) {
+    public PurchaseViewModel(@NonNull IPurchaseApi purchaseApi) {
         mPurchaseApi = purchaseApi;
         purchase = new Purchase();
     }

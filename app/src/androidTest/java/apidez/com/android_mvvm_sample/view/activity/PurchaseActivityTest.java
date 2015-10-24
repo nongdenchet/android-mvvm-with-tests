@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 
 import apidez.com.android_mvvm_sample.ComponentBuilder;
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.api.PurchaseApi;
+import apidez.com.android_mvvm_sample.api.IPurchaseApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
 import apidez.com.android_mvvm_sample.dependency.component.PurchaseComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
@@ -55,7 +55,7 @@ public class PurchaseActivityTest {
         PurchaseModule stubModule = new PurchaseModule() {
             @Provides
             @ViewScope
-            IPurchaseViewModel providePurchaseViewModel(PurchaseApi purchaseApi) {
+            IPurchaseViewModel providePurchaseViewModel(IPurchaseApi purchaseApi) {
                 return new StubPurchaseViewModel();
             }
         };

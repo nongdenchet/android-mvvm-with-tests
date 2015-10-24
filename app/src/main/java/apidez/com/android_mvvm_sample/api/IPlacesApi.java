@@ -8,7 +8,7 @@ import rx.Observable;
 /**
  * Created by nongdenchet on 10/21/15.
  */
-public interface PlacesApi {
+public interface IPlacesApi {
     @GET("nearbysearch/json?types=food&key=AIzaSyBk3A8Q3pqVWYYmZhODbE-D2lf2ZHEoKuo")
     Observable<GoogleSearchResult> placesResult(
             @Query("location") String location,

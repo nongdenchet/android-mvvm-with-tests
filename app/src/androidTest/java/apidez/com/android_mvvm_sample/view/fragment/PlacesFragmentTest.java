@@ -12,7 +12,7 @@ import org.junit.runners.JUnit4;
 
 import apidez.com.android_mvvm_sample.ComponentBuilder;
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.api.PlacesApi;
+import apidez.com.android_mvvm_sample.api.IPlacesApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
 import apidez.com.android_mvvm_sample.dependency.component.PlacesComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
@@ -47,7 +47,7 @@ public class PlacesFragmentTest {
         PlacesModule stubModule = new PlacesModule() {
             @Provides
             @ViewScope
-            public IPlacesViewModel providePlacesViewModel(PlacesApi placesApi) {
+            public IPlacesViewModel providePlacesViewModel(IPlacesApi placesApi) {
                 return new StubPlacesViewModel();
             }
         };

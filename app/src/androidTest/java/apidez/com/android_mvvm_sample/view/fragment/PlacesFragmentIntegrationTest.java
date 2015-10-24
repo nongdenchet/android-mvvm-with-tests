@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 
 import apidez.com.android_mvvm_sample.ComponentBuilder;
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.api.PlacesApi;
+import apidez.com.android_mvvm_sample.api.IPlacesApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
 import apidez.com.android_mvvm_sample.dependency.component.PlacesComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
@@ -47,8 +47,8 @@ public class PlacesFragmentIntegrationTest {
     public void setUp() throws Exception {
         PlacesModule mockModule = new PlacesModule() {
             @Provides
-            public PlacesApi providePlacesApi() {
-                PlacesApi placesApi = Mockito.mock(PlacesApi.class);
+            public IPlacesApi providePlacesApi() {
+                IPlacesApi placesApi = Mockito.mock(IPlacesApi.class);
                 when(placesApi.placesResult(any(String.class), any(Double.class)))
                         .thenReturn(Observable.just(TestDataUtils.nearByData()));
                 return placesApi;

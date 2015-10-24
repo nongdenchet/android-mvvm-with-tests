@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import apidez.com.android_mvvm_sample.R;
 import apidez.com.android_mvvm_sample.adapter.PlacesAdapter;
 import apidez.com.android_mvvm_sample.MyApplication;
-import apidez.com.android_mvvm_sample.utils.ToastUtils;
 import apidez.com.android_mvvm_sample.viewmodel.IPlacesViewModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -102,11 +101,7 @@ public class PlacesFragment extends BaseFragment {
                 .takeUntil(preDestroy())
                 .doOnSubscribe(mProgressDialog::show)
                 .doOnTerminate(mProgressDialog::hide)
-                .subscribe(succes -> {
-                }, throwable -> {
-                    throwable.printStackTrace();
-                    ToastUtils.showLongToast(getActivity(), R.string.error);
-                });
+                .subscribe(succes -> {}, throwable -> {});
     }
 
     @Override
