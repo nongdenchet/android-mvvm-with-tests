@@ -55,7 +55,7 @@ public class PlacesViewModel implements IPlacesViewModel {
      */
     @Override
     public void filterPlacesByType(String type) {
-        if (type.equals("all")) {
+        if (type.equals("All")) {
             mPlaces.onNext(allPlaces);
         } else {
             List<Place> newPlaces = new ArrayList<>();
