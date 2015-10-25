@@ -16,12 +16,10 @@ import apidez.com.android_mvvm_sample.api.IPurchaseApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
 import apidez.com.android_mvvm_sample.dependency.component.PurchaseComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PurchaseModule;
-import apidez.com.android_mvvm_sample.dependency.scope.ViewScope;
 import apidez.com.android_mvvm_sample.stub.StubPurchaseViewModel;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import apidez.com.android_mvvm_sample.utils.UiUtils;
 import apidez.com.android_mvvm_sample.viewmodel.IPurchaseViewModel;
-import dagger.Provides;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -54,8 +52,7 @@ public class PurchaseActivityTest {
     @Before
     public void setUp() throws Exception {
         PurchaseModule stubModule = new PurchaseModule() {
-            @Provides
-            @ViewScope
+            @Override
             public IPurchaseViewModel providePurchaseViewModel(IPurchaseApi purchaseApi) {
                 return new StubPurchaseViewModel();
             }
