@@ -123,7 +123,7 @@ public class PlacesFragment extends BaseFragment {
             case R.id.action_restaurant:
             case R.id.action_all:
                 // Filter the items
-                mViewModel.filterPlacesByType(item.getTitle().toString().toLowerCase());
+                mViewModel.filterPlacesByType(item.getTitle().toString());
                 return true;
         }
         return super.onOptionsItemSelected(item);

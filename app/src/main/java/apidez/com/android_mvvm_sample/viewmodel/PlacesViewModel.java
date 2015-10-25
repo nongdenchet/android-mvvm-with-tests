@@ -70,6 +70,7 @@ public class PlacesViewModel implements IPlacesViewModel {
      * Helpers change type to api_type
      */
     private String getApiType(String type) {
+        type = type.toLowerCase();
         switch (type) {
             case "theater":
                 return "movie_theater";
