@@ -158,7 +158,6 @@ public class PurchaseActivityIntegrationTest {
         onView(withId(R.id.email)).perform(typeText("rain@gmail.com"));
         UiUtils.closeKeyboard(activityTestRule.getActivity());
         onView(withId(R.id.btnSubmit)).perform(click());
-        onView(withText(R.string.loading)).check(matches(isDisplayed()));
         waitText("Success", 3000);
     }
 
@@ -168,7 +167,6 @@ public class PurchaseActivityIntegrationTest {
         onView(withId(R.id.email)).perform(typeText("apidez@gmail.com"));
         UiUtils.closeKeyboard(activityTestRule.getActivity());
         onView(withId(R.id.btnSubmit)).perform(click());
-        onView(withText(R.string.loading)).check(matches(isDisplayed()));
         waitText("Error", 10000); // A little bit long because it has three retry
     }
 }

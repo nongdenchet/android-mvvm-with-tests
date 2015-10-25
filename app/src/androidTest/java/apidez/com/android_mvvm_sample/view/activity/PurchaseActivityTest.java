@@ -124,7 +124,6 @@ public class PurchaseActivityTest {
         onView(withId(R.id.creditCard)).perform(typeText("abcd"));
         UiUtils.closeKeyboard(activityTestRule.getActivity());
         onView(withId(R.id.btnSubmit)).perform(click());
-        onView(withText(R.string.loading)).check(matches(isDisplayed()));
         waitText("Success", 3000);
     }
 
@@ -133,7 +132,6 @@ public class PurchaseActivityTest {
         onView(withId(R.id.creditCard)).perform(typeText("abcd"));
         UiUtils.closeKeyboard(activityTestRule.getActivity());
         onView(withId(R.id.btnSubmit)).perform(click());
-        onView(withText(R.string.loading)).check(matches(isDisplayed()));
         waitText("Error", 3000);
     }
 }
