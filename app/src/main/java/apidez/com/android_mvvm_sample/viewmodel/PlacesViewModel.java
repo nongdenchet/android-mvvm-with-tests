@@ -19,7 +19,7 @@ public class PlacesViewModel implements IPlacesViewModel {
     private IPlacesApi mPlacesApi;
     private final int TIME_OUT = 5;
     private final int RETRY = 3;
-    private List<Place> allPlaces = new ArrayList<>();
+    private List<Place> allPlaces;
 
     public PlacesViewModel(@NonNull IPlacesApi placesApi) {
         mPlacesApi = placesApi;
