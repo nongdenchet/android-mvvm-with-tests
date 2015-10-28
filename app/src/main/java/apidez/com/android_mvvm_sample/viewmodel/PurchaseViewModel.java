@@ -57,8 +57,6 @@ public class PurchaseViewModel implements IPurchaseViewModel {
                 (validCreditCard, validEmail) -> validCreditCard && validEmail);
     }
 
-    /***** Commands *****/
-
     /**
      * Update the credit card
      */
