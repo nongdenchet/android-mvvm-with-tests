@@ -29,8 +29,6 @@ public class PlacesViewModelTest {
     private IPlacesApi placesApi;
     private TestSubscriber<Boolean> testSubscriber;
     private TestSubscriber<List<Place>> testSubscriberPlaces;
-    private String LOCATION = "location";
-    private int RADIUS = 100;
 
     @Before
     public void setUpViewModel() {
@@ -38,12 +36,12 @@ public class PlacesViewModelTest {
         placesViewModel = new PlacesViewModel(placesApi);
         testSubscriber = TestSubscriber.create();
         testSubscriberPlaces = TestSubscriber.create();
-        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(testDataObservable());
+        when(placesApi.placesResult()).thenReturn(testDataObservable());
     }
 
     @Test
     public void fetchAllPlacesSuccess() {
-        placesViewModel.fetchAllPlaces(LOCATION, RADIUS).subscribe(testSubscriber);
+        placesViewModel.fetchAllPlaces().subscribe(testSubscriber);
         testSubscriber.assertNoErrors();
         testSubscriber.assertCompleted();
         testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
@@ -51,7 +49,7 @@ public class PlacesViewModelTest {
 
     @Test
     public void fetchAllPlaces() {
-        placesViewModel.fetchAllPlaces(LOCATION, RADIUS).subscribe();
+        placesViewModel.fetchAllPlaces().subscribe();
         placesViewModel.currentPlaces().subscribe(testSubscriberPlaces);
         testSubscriberPlaces.assertNoErrors();
         List<List<Place>> lists = testSubscriberPlaces.getOnNextEvents();
@@ -97,7 +95,7 @@ public class PlacesViewModelTest {
 
     @Test
     public void fetchTimeout() throws Exception {
-        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(
+        when(placesApi.placesResult()).thenReturn(
                 Observable.create(subscriber -> {
                     try {
                         Thread.sleep(5100);
@@ -109,7 +107,7 @@ public class PlacesViewModelTest {
                 })
         );
         try {
-            boolean success = placesViewModel.fetchAllPlaces(LOCATION, RADIUS).toBlocking().first();
+            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
             if (success) fail("Should be timeout");
         } catch (Exception ignored) {
             // The test pass here, it should be timeout
@@ -118,7 +116,7 @@ public class PlacesViewModelTest {
 
     @Test
     public void fetchOnTime() throws Exception {
-        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(
+        when(placesApi.placesResult()).thenReturn(
                 Observable.create(subscriber -> {
                     try {
                         Thread.sleep(4900);
@@ -130,7 +128,7 @@ public class PlacesViewModelTest {
                 })
         );
         try {
-            boolean success = placesViewModel.fetchAllPlaces(LOCATION, RADIUS).toBlocking().first();
+            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
             assertTrue(success);
         } catch (Exception ignored) {
             fail("Should be on time");
@@ -140,7 +138,7 @@ public class PlacesViewModelTest {
     @Test
     public void fetchRetry() throws Exception {
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(
+        when(placesApi.placesResult()).thenReturn(
                 Observable.create(subscriber -> {
                     if (atomicInteger.getAndIncrement() < 3) {
                         subscriber.onError(new Exception());
@@ -151,8 +149,8 @@ public class PlacesViewModelTest {
                 })
         );
         try {
-            boolean success = placesViewModel.fetchAllPlaces(LOCATION, RADIUS).toBlocking().first();
-            verify(placesApi).placesResult(LOCATION, RADIUS);
+            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
+            verify(placesApi).placesResult();
             assertTrue(success);
         } catch (Exception ignored) {
             fail("Have to retry three times");
@@ -162,7 +160,7 @@ public class PlacesViewModelTest {
     @Test
     public void fetchExceedRetry() throws Exception {
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        when(placesApi.placesResult(LOCATION, RADIUS)).thenReturn(
+        when(placesApi.placesResult()).thenReturn(
                 Observable.create(subscriber -> {
                     if (atomicInteger.getAndIncrement() < 4) {
                         subscriber.onError(new Exception());
@@ -173,7 +171,7 @@ public class PlacesViewModelTest {
                 })
         );
         try {
-            placesViewModel.fetchAllPlaces(LOCATION, RADIUS).toBlocking().first();
+            placesViewModel.fetchAllPlaces().toBlocking().first();
             fail("Should be out of retry");
         } catch (Exception ignored) {
             // Test pass here
@@ -181,7 +179,7 @@ public class PlacesViewModelTest {
     }
 
     private List<Place> getAndFilterWith(String type) {
-        placesViewModel.fetchAllPlaces(LOCATION, RADIUS).subscribe();
+        placesViewModel.fetchAllPlaces().subscribe();
         placesViewModel.filterPlacesByType(type);
         placesViewModel.currentPlaces().subscribe(testSubscriberPlaces);
         testSubscriberPlaces.assertNoErrors();

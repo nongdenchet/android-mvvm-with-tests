@@ -17,7 +17,7 @@ import rx.Observable;
  */
 public class StubPlacesViewModel implements IPlacesViewModel {
     @Override
-    public Observable<Boolean> fetchAllPlaces(String location, double radius) {
+    public Observable<Boolean> fetchAllPlaces() {
         return Observable.just(true);
     }
 
