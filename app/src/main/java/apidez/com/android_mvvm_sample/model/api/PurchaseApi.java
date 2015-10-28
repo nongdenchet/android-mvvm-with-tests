@@ -1,10 +1,10 @@
-package apidez.com.android_mvvm_sample.api;
+package apidez.com.android_mvvm_sample.model.api;
 
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import apidez.com.android_mvvm_sample.model.Purchase;
+import apidez.com.android_mvvm_sample.model.entity.Purchase;
 import rx.Observable;
 
 /**

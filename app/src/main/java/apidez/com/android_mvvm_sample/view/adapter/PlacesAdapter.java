@@ -1,4 +1,4 @@
-package apidez.com.android_mvvm_sample.adapter;
+package apidez.com.android_mvvm_sample.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.model.Place;
+import apidez.com.android_mvvm_sample.model.entity.Place;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

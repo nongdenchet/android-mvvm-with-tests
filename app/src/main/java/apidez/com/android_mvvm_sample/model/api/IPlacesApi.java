@@ -1,6 +1,6 @@
-package apidez.com.android_mvvm_sample.api;
+package apidez.com.android_mvvm_sample.model.api;
 
-import apidez.com.android_mvvm_sample.model.GoogleSearchResult;
+import apidez.com.android_mvvm_sample.model.entity.GoogleSearchResult;
 import retrofit.http.GET;
 import retrofit.http.Query;
 import rx.Observable;

@@ -1,6 +1,6 @@
 package apidez.com.android_mvvm_sample.dependency.module;
 
-import apidez.com.android_mvvm_sample.api.IPlacesApi;
+import apidez.com.android_mvvm_sample.model.api.IPlacesApi;
 import apidez.com.android_mvvm_sample.dependency.scope.ViewScope;
 import apidez.com.android_mvvm_sample.utils.RetrofitUtils;
 import apidez.com.android_mvvm_sample.viewmodel.IPlacesViewModel;

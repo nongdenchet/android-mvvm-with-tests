@@ -1,6 +1,6 @@
-package apidez.com.android_mvvm_sample.api;
+package apidez.com.android_mvvm_sample.model.api;
 
-import apidez.com.android_mvvm_sample.model.Purchase;
+import apidez.com.android_mvvm_sample.model.entity.Purchase;
 import rx.Observable;
 
 /**

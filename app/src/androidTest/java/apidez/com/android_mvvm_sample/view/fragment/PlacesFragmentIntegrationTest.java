@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 
 import apidez.com.android_mvvm_sample.ComponentBuilder;
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.api.IPlacesApi;
+import apidez.com.android_mvvm_sample.model.api.IPlacesApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
 import apidez.com.android_mvvm_sample.dependency.component.PlacesComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;

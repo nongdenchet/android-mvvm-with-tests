@@ -1,4 +1,4 @@
-package apidez.com.android_mvvm_sample.model;
+package apidez.com.android_mvvm_sample.model.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import apidez.com.android_mvvm_sample.model.GoogleSearchResult;
-import apidez.com.android_mvvm_sample.model.Place;
+import apidez.com.android_mvvm_sample.model.entity.GoogleSearchResult;
+import apidez.com.android_mvvm_sample.model.entity.Place;
 
 /**
  * Created by nongdenchet on 10/22/15.

@@ -12,8 +12,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import apidez.com.android_mvvm_sample.api.PurchaseApi;
-import apidez.com.android_mvvm_sample.model.Purchase;
+import apidez.com.android_mvvm_sample.model.api.PurchaseApi;
+import apidez.com.android_mvvm_sample.model.entity.Purchase;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 

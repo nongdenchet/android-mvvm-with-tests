@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.adapter.PlacesAdapter;
+import apidez.com.android_mvvm_sample.view.adapter.PlacesAdapter;
 import apidez.com.android_mvvm_sample.MyApplication;
 import apidez.com.android_mvvm_sample.viewmodel.IPlacesViewModel;
 import butterknife.Bind;

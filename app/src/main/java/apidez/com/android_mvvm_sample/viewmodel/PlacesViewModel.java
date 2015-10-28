@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import apidez.com.android_mvvm_sample.api.IPlacesApi;
-import apidez.com.android_mvvm_sample.model.Place;
+import apidez.com.android_mvvm_sample.model.api.IPlacesApi;
+import apidez.com.android_mvvm_sample.model.entity.Place;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 

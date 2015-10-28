@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import apidez.com.android_mvvm_sample.api.IPlacesApi;
-import apidez.com.android_mvvm_sample.model.GoogleSearchResult;
-import apidez.com.android_mvvm_sample.model.Place;
+import apidez.com.android_mvvm_sample.model.api.IPlacesApi;
+import apidez.com.android_mvvm_sample.model.entity.GoogleSearchResult;
+import apidez.com.android_mvvm_sample.model.entity.Place;
 import apidez.com.android_mvvm_sample.utils.TestDataUtils;
 import rx.Observable;
 import rx.observers.TestSubscriber;

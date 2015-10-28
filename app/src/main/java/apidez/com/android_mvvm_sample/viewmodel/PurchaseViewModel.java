@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.TimeUnit;
 
-import apidez.com.android_mvvm_sample.api.IPurchaseApi;
-import apidez.com.android_mvvm_sample.model.Purchase;
+import apidez.com.android_mvvm_sample.model.api.IPurchaseApi;
+import apidez.com.android_mvvm_sample.model.entity.Purchase;
 import apidez.com.android_mvvm_sample.utils.NumericUtils;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
@@ -30,9 +30,7 @@ public class PurchaseViewModel implements IPurchaseViewModel {
     private BehaviorSubject<CharSequence> mCreditCard = BehaviorSubject.create();
     private BehaviorSubject<CharSequence> mEmail = BehaviorSubject.create();
 
-    // model
     public Purchase purchase;
-
     public Purchase getPurchase() {
         return purchase;
     }

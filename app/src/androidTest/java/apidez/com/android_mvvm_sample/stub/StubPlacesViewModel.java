@@ -3,7 +3,7 @@ package apidez.com.android_mvvm_sample.stub;
 import java.util.Arrays;
 import java.util.List;
 
-import apidez.com.android_mvvm_sample.model.Place;
+import apidez.com.android_mvvm_sample.model.entity.Place;
 import apidez.com.android_mvvm_sample.utils.StringUtils;
 import apidez.com.android_mvvm_sample.viewmodel.IPlacesViewModel;
 import rx.Observable;

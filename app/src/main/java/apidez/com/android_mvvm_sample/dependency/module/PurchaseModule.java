@@ -2,8 +2,8 @@ package apidez.com.android_mvvm_sample.dependency.module;
 
 import com.google.gson.Gson;
 
-import apidez.com.android_mvvm_sample.api.IPurchaseApi;
-import apidez.com.android_mvvm_sample.api.PurchaseApi;
+import apidez.com.android_mvvm_sample.model.api.IPurchaseApi;
+import apidez.com.android_mvvm_sample.model.api.PurchaseApi;
 import apidez.com.android_mvvm_sample.dependency.scope.ViewScope;
 import apidez.com.android_mvvm_sample.viewmodel.IPurchaseViewModel;
 import apidez.com.android_mvvm_sample.viewmodel.PurchaseViewModel;
