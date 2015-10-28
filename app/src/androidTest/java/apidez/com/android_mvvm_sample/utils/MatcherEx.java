@@ -23,6 +23,24 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class MatcherEx {
 
     /**
+     * Returns a matcher that matches {@link View}s is visible
+     */
+    public static Matcher<View> isVisible() {
+        return new TypeSafeMatcher<View>() {
+            @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+            @Override
+            protected boolean matchesSafely(View view) {
+                return view.getVisibility() == View.VISIBLE;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("is visible");
+            }
+        };
+    }
+
+    /**
      * Returns a matcher that matches {@link MyTextView}s resourceId
      */
     public static Matcher<View> hasResId(int resId) {

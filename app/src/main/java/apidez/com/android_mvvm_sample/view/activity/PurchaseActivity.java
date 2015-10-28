@@ -107,18 +107,14 @@ public class PurchaseActivity extends BaseActivity {
         mViewModel.creditCardValid()
                 .takeUntil(preDestroy())
                 .subscribe(valid -> {
-                    mLayoutCreditCard.setError(getString(R.string.error_credit_card));
-                    mLayoutCreditCard.setErrorEnabled(!valid);
-                    if (valid) UiUtils.resetTintColor(this, mEdtCreditCard);
+                    mLayoutCreditCard.setError(valid ? "" : getString(R.string.error_credit_card));
                 });
 
         // binding password change
         mViewModel.emailValid()
                 .takeUntil(preDestroy())
                 .subscribe(valid -> {
-                    mLayoutEmail.setError(getString(R.string.error_email));
-                    mLayoutEmail.setErrorEnabled(!valid);
-                    if (valid) UiUtils.resetTintColor(this, mEdtEmail);
+                    mLayoutEmail.setError(valid ? "" : getString(R.string.error_email));
                 });
 
         // can submit

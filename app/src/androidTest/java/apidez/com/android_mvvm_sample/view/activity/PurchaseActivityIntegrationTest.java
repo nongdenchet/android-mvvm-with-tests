@@ -32,6 +32,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasListener;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasResId;
+import static apidez.com.android_mvvm_sample.utils.MatcherEx.isVisible;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.waitText;
 import static org.hamcrest.Matchers.not;
 
@@ -93,25 +94,29 @@ public class PurchaseActivityIntegrationTest {
     @Test
     public void hasNoErrorCreditCard() throws Exception {
         onView((withId(R.id.creditCard))).perform(typeText("411111111111"));
-        onView(withText(R.string.error_credit_card)).check(doesNotExist());
+        Thread.sleep(1000);
+        onView(withText(R.string.error_credit_card)).check(matches(not(isVisible())));
     }
 
     @Test
     public void hasErrorCreditCard() throws Exception {
         onView(withId(R.id.creditCard)).perform(typeText("abcdefabcdef"));
         onView(withText(R.string.error_credit_card)).check(matches(isDisplayed()));
+        onView(withText(R.string.error_credit_card)).check(matches(isVisible()));
     }
 
     @Test
     public void hasNoErrorEmail() throws Exception {
         onView(withId(R.id.email)).perform(typeText("abc@abc.com"));
-        onView(withText(R.string.error_email)).check(doesNotExist());
+        Thread.sleep(1000);
+        onView(withText(R.string.error_email)).check(matches(not(isVisible())));
     }
 
     @Test
     public void hasErrorEmail() throws Exception {
         onView(withId(R.id.email)).perform(typeText("abc___#!@...com"));
         onView(withText(R.string.error_email)).check(matches(isDisplayed()));
+        onView(withText(R.string.error_email)).check(matches(isVisible()));
     }
 
     @Test
