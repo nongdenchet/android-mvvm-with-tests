@@ -14,7 +14,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".view.activity.PurchaseActivity"
-            android:label="@string/purchase_activity_label"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -25,7 +24,6 @@
         </activity>
         <activity
             android:name=".view.activity.EmptyActivity"
-            android:label="@string/title_places"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
