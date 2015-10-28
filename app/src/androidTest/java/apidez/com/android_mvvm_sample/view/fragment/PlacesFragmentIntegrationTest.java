@@ -13,10 +13,10 @@ import org.mockito.Mockito;
 
 import apidez.com.android_mvvm_sample.ComponentBuilder;
 import apidez.com.android_mvvm_sample.R;
-import apidez.com.android_mvvm_sample.model.api.IPlacesApi;
 import apidez.com.android_mvvm_sample.dependency.component.AppComponent;
 import apidez.com.android_mvvm_sample.dependency.component.PlacesComponent;
 import apidez.com.android_mvvm_sample.dependency.module.PlacesModule;
+import apidez.com.android_mvvm_sample.model.api.IPlacesApi;
 import apidez.com.android_mvvm_sample.utils.ApplicationUtils;
 import apidez.com.android_mvvm_sample.utils.TestDataUtils;
 import apidez.com.android_mvvm_sample.view.activity.EmptyActivity;
@@ -28,7 +28,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static apidez.com.android_mvvm_sample.utils.MatcherEx.hasItemCount;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -48,7 +47,7 @@ public class PlacesFragmentIntegrationTest {
             @Override
             public IPlacesApi providePlacesApi() {
                 IPlacesApi placesApi = Mockito.mock(IPlacesApi.class);
-                when(placesApi.placesResult(any(String.class), any(Double.class)))
+                when(placesApi.placesResult())
                         .thenReturn(Observable.just(TestDataUtils.nearByData()));
                 return placesApi;
             }
