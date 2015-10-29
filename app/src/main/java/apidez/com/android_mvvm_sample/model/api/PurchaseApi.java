@@ -20,7 +20,8 @@ public class PurchaseApi implements IPurchaseApi {
     /**
      * Fake networking
      */
-    public Observable<Boolean> submitPurchase(Purchase purchase) {
+    public Observable<Boolean> submitPurchase(String creditCard, String email) {
+        Purchase purchase = new Purchase(creditCard, email);
         return Observable.create(subscriber -> {
             try {
                 String json = mGson.toJson(purchase);

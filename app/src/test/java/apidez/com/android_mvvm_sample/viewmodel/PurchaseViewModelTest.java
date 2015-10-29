@@ -1,6 +1,6 @@
 package apidez.com.android_mvvm_sample.viewmodel;
 
-import android.test.suitebuilder.annotation.SmallTest;
+import android.test.suitebuilder.annotation.MediumTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,20 +13,19 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import apidez.com.android_mvvm_sample.model.api.PurchaseApi;
-import apidez.com.android_mvvm_sample.model.entity.Purchase;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
-@SmallTest
+@MediumTest
 @RunWith(JUnit4.class)
 public class PurchaseViewModelTest {
 
@@ -38,7 +37,7 @@ public class PurchaseViewModelTest {
     public void setUpViewModel() {
         // Mock purchase api
         purchaseApi = Mockito.mock(PurchaseApi.class);
-        when(purchaseApi.submitPurchase(any(Purchase.class))).thenReturn(Observable.just(true));
+        when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(Observable.just(true));
 
         // Create test viewmodel
         purchaseViewModel = new PurchaseViewModel(purchaseApi);
@@ -130,18 +129,16 @@ public class PurchaseViewModelTest {
     public void submit() throws Exception {
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
-        Purchase purchase = purchaseViewModel.getPurchase();
         purchaseViewModel.submit().subscribe(testSubscriber);
         testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
-        verify(purchaseApi).submitPurchase(purchase);
+        verify(purchaseApi).submitPurchase("412123123341234123", "ndc@gmail.com");
     }
 
     @Test
     public void submitTimeout() throws Exception {
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
-        Purchase purchase = purchaseViewModel.getPurchase();
-        when(purchaseApi.submitPurchase(purchase)).thenReturn(
+        when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
                 Observable.create(subscriber -> {
                     try {
                         Thread.sleep(5100);
@@ -164,8 +161,7 @@ public class PurchaseViewModelTest {
     public void submitOnTime() throws Exception {
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
-        Purchase purchase = purchaseViewModel.getPurchase();
-        when(purchaseApi.submitPurchase(purchase)).thenReturn(
+        when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
                 Observable.create(subscriber -> {
                     try {
                         Thread.sleep(4900);
@@ -190,8 +186,7 @@ public class PurchaseViewModelTest {
         AtomicInteger atomicInteger = new AtomicInteger(0);
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
-        Purchase purchase = purchaseViewModel.getPurchase();
-        when(purchaseApi.submitPurchase(purchase)).thenReturn(
+        when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
                 Observable.create(subscriber -> {
                     if (atomicInteger.getAndIncrement() < 3) {
                         subscriber.onError(new Exception());
@@ -203,7 +198,7 @@ public class PurchaseViewModelTest {
         );
         try {
             boolean success = purchaseViewModel.submit().toBlocking().first();
-            verify(purchaseApi).submitPurchase(purchase);
+            verify(purchaseApi).submitPurchase(anyString(), anyString());
             assertTrue(success);
         } catch (Exception ignored) {
             fail("Have to retry three times");
@@ -215,8 +210,7 @@ public class PurchaseViewModelTest {
         AtomicInteger atomicInteger = new AtomicInteger(0);
         purchaseViewModel.nextCreditCard("412123123341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
-        Purchase purchase = purchaseViewModel.getPurchase();
-        when(purchaseApi.submitPurchase(purchase)).thenReturn(
+        when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
                 Observable.create(subscriber -> {
                     if (atomicInteger.getAndIncrement() < 4) {
                         subscriber.onError(new Exception());

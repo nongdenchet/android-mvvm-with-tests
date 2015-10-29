@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import java.util.concurrent.TimeUnit;
 
 import apidez.com.android_mvvm_sample.model.api.IPurchaseApi;
-import apidez.com.android_mvvm_sample.model.entity.Purchase;
 import apidez.com.android_mvvm_sample.utils.NumericUtils;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
@@ -23,17 +22,11 @@ public class PurchaseViewModel implements IPurchaseViewModel {
 
     public PurchaseViewModel(@NonNull IPurchaseApi purchaseApi) {
         mPurchaseApi = purchaseApi;
-        purchase = new Purchase();
     }
 
     // observable property
     private BehaviorSubject<CharSequence> mCreditCard = BehaviorSubject.create();
     private BehaviorSubject<CharSequence> mEmail = BehaviorSubject.create();
-
-    public Purchase purchase;
-    public Purchase getPurchase() {
-        return purchase;
-    }
 
     /**
      * Return an observable that emit the validation of credit card
@@ -75,9 +68,7 @@ public class PurchaseViewModel implements IPurchaseViewModel {
      * Command submit
      */
     public Observable<Boolean> submit() {
-        purchase.setCreditCard(mCreditCard.getValue().toString());
-        purchase.setEmail(mEmail.getValue().toString());
-        return mPurchaseApi.submitPurchase(purchase)
+        return mPurchaseApi.submitPurchase(mCreditCard.getValue().toString(), mEmail.getValue().toString())
                 .timeout(TIME_OUT, TimeUnit.SECONDS)
                 .retry(RETRY);
     }

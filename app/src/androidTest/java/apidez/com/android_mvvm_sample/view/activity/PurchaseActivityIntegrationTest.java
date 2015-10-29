@@ -57,10 +57,10 @@ public class PurchaseActivityIntegrationTest {
         PurchaseModule mockModule = new PurchaseModule() {
             @Override
             public IPurchaseApi providePurchaseApi(Gson gson) {
-                return purchase -> Observable.create(subscriber -> {
+                return (creditCard, email) -> Observable.create(subscriber -> {
                     try {
                         Thread.sleep(2000);
-                        if (purchase.getCreditCard().equals(FAIL_CARD))
+                        if (creditCard.equals(FAIL_CARD))
                             throw new Exception("Invalid card");
                         subscriber.onNext(true);
                         subscriber.onCompleted();
