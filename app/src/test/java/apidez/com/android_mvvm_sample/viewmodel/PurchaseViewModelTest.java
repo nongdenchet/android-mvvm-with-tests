@@ -1,6 +1,6 @@
 package apidez.com.android_mvvm_sample.viewmodel;
 
-import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
-@MediumTest
+@SmallTest
 @RunWith(JUnit4.class)
 public class PurchaseViewModelTest {
 
@@ -127,16 +127,16 @@ public class PurchaseViewModelTest {
 
     @Test
     public void submit() throws Exception {
-        purchaseViewModel.nextCreditCard("412123123341234123");
+        purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         purchaseViewModel.submit().subscribe(testSubscriber);
         testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
-        verify(purchaseApi).submitPurchase("412123123341234123", "ndc@gmail.com");
+        verify(purchaseApi).submitPurchase("412341234123", "ndc@gmail.com");
     }
 
     @Test
     public void submitTimeout() throws Exception {
-        purchaseViewModel.nextCreditCard("412123123341234123");
+        purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
                 Observable.create(subscriber -> {
@@ -159,7 +159,7 @@ public class PurchaseViewModelTest {
 
     @Test
     public void submitOnTime() throws Exception {
-        purchaseViewModel.nextCreditCard("412123123341234123");
+        purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
                 Observable.create(subscriber -> {
@@ -184,7 +184,7 @@ public class PurchaseViewModelTest {
     @Test
     public void submitRetry() throws Exception {
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        purchaseViewModel.nextCreditCard("412123123341234123");
+        purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
                 Observable.create(subscriber -> {
@@ -208,7 +208,7 @@ public class PurchaseViewModelTest {
     @Test
     public void submitExceedRetry() throws Exception {
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        purchaseViewModel.nextCreditCard("412123123341234123");
+        purchaseViewModel.nextCreditCard("412341234123");
         purchaseViewModel.nextEmail("ndc@gmail.com");
         when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
                 Observable.create(subscriber -> {
